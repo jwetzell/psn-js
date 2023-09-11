@@ -1,7 +1,6 @@
-const { PSN_PACKET_HEADER_PARSER } = require('../common');
 const Parser = require('binary-parser').Parser;
 
-const PSN_DATA_TRACKER_FIELD_PARSER = new Parser()
+const DataTrackerFieldParser = new Parser()
   .uint16le('id')
   .uint16le('data_len', {
     formatter: (item) => {
@@ -48,30 +47,9 @@ const PSN_DATA_TRACKER_PARSER = new Parser()
     length: 'data_len',
   });
 
-const PSN_DATA_TRACKER_LIST_PARSER = new Parser()
-  .uint16le('id')
-  .uint16le('data_len', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return Number.parseInt(binary.substring(1), 2);
-    },
-  })
-  .seek(-2)
-  .uint16le('has_subchunks', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return binary.charAt(0) === '1';
-    },
-  })
-  .array('trackers', { type: PSN_DATA_TRACKER_PARSER, lengthInBytes: 'data_len' });
-
-const PSN_DATA_CHUNK_DATA_PARSER = new Parser()
-  .nest('packet_header', { type: PSN_PACKET_HEADER_PARSER })
-  .nest('tracker_list', { type: PSN_DATA_TRACKER_LIST_PARSER });
+const DataTrackerListParser = new Parser().array('trackers', { type: PSN_DATA_TRACKER_PARSER, readUntil: 'eof' });
 
 module.exports = {
-  PSN_DATA_CHUNK_DATA_PARSER,
-  PSN_DATA_TRACKER_FIELD_PARSER,
-  PSN_DATA_TRACKER_LIST_PARSER,
-  PSN_DATA_TRACKER_PARSER,
+  DataTrackerFieldParser,
+  DataTrackerListParser,
 };

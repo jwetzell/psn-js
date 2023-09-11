@@ -1,71 +1,141 @@
-/* eslint-disable no-param-reassign */
-const { Parser } = require('binary-parser');
-const psnParser = require('./parsers/index.js');
-const { PSN_DATA_TRACKER_FIELD_PARSER } = require('./parsers/data/index.js');
+const PacketParser = require('./parsers/index.js');
+const InfoPacket = require('./models/InfoPacket.js');
+const DataPacket = require('./models/DataPacket.js');
 
 const DATA_PACKET = 0x6755;
 const INFO_PACKET = 0x6756;
 
 class Decoder {
+  lastInfoPacketHeader;
+
+  lastDataPacketHeader;
+
+  infoPacketFrames = {};
+
+  dataPacketFrames = {};
+
   constructor() {
-    this.info = {};
+    this.info = {
+      trackers: {},
+    };
 
     this.data = {
       trackers: {},
     };
   }
 
+  updateInfo(framePackets) {
+    console.log('info update');
+    framePackets.forEach((packet) => {
+      packet.subChunks?.forEach((subChunk) => {
+        if (subChunk.id === 0x0001) {
+          // NOTE(jwetzell): system name subChunk
+          this.info.system_name = subChunk.system_name;
+        } else if (subChunk.id === 0x0002) {
+          subChunk.trackers?.forEach((tracker) => {
+            if (this.info.trackers[tracker.id] === undefined) {
+              this.info.trackers[tracker.id] = {};
+            }
+            this.info.trackers[tracker.id].name = tracker.tracker_name.tracker_name;
+          });
+        }
+      });
+    });
+  }
+
+  updateData(framePackets) {
+    console.log('data update');
+    framePackets.forEach((packet) => {
+      packet.subChunks?.forEach((subChunk) => {
+        if (subChunk.id === 0x0001) {
+          subChunk.trackers?.forEach((tracker) => {
+            if (this.data.trackers[tracker.id] === undefined) {
+              this.data.trackers[tracker.id] = {};
+            }
+            tracker.fields?.forEach((field) => {
+              Object.entries(field).forEach(([key, value]) => {
+                this.data.trackers[tracker.id][key] = value;
+              });
+            });
+          });
+        }
+      });
+    });
+  }
+
   // TODO(jwetzell): support multiple frame packets this might require some rework of how chunks are assumed
   decode(packetBuf) {
-    const packet = psnParser(packetBuf);
+    const packet = PacketParser(packetBuf);
+
     if (packet.id === INFO_PACKET) {
-      if (packet.chunk_data?.tracker_list?.trackers) {
-        packet.chunk_data?.tracker_list?.trackers.forEach((tracker) => {
-          if (this.data.trackers[tracker.id] === undefined) {
-            this.data.trackers[tracker.id] = {};
+      const infoPacket = new InfoPacket(packet);
+      if (infoPacket) {
+        if (infoPacket.subChunks?.length > 0) {
+          const currentInfoPacketHeader = infoPacket.getHeaderPacket();
+          if (!currentInfoPacketHeader) {
+            // NOTE(jwetzell): not sure that info packets without a header subchunk are valid?
+            return;
           }
-          this.data.trackers[tracker.id] = {
-            ...this.data.trackers[tracker.id],
-            id: tracker.id,
-            name: tracker.tracker_name.tracker_name,
-          };
-        });
+
+          const systemSubChunk = infoPacket.getSystemPacket();
+          if (!systemSubChunk) {
+            // NOTE(jwetzell): not sure that info packets without a system subchunk are valid?
+            return;
+          }
+
+          if (this.infoPacketFrames[currentInfoPacketHeader.frame_id] === undefined) {
+            this.infoPacketFrames[currentInfoPacketHeader.frame_id] = [];
+          }
+          this.infoPacketFrames[currentInfoPacketHeader.frame_id].push(infoPacket);
+
+          if (
+            this.infoPacketFrames[currentInfoPacketHeader.frame_id].length ===
+            currentInfoPacketHeader.frame_packet_count
+          ) {
+            console.log('found complete info frame');
+            this.updateInfo(this.infoPacketFrames[currentInfoPacketHeader.frame_id]);
+            delete this.infoPacketFrames[currentInfoPacketHeader.frame_id];
+          } else {
+            // TODO(jwetzell): need to compute whether a frame is complete
+            console.log('compute frame completion');
+          }
+
+          this.lastInfoPacketHeader = currentInfoPacketHeader;
+        }
       }
     } else if (packet.id === DATA_PACKET) {
-      if (packet.chunk_data?.tracker_list?.trackers) {
-        packet.chunk_data?.tracker_list?.trackers.forEach((tracker) => {
-          if (this.data.trackers[tracker.id] === undefined) {
-            this.data.trackers[tracker.id] = {};
+      const dataPacket = new DataPacket(packet);
+      if (dataPacket) {
+        if (dataPacket.subChunks?.length > 0) {
+          const currentDataPacketHeader = dataPacket.getHeaderPacket();
+          if (!currentDataPacketHeader) {
+            // NOTE(jwetzell): not sure that info packets without a header subchunk are valid?
+            console.error('data packet with no header');
+            return;
           }
-          this.data.trackers[tracker.id] = {
-            ...this.data.trackers[tracker.id],
-            id: tracker.id,
-          };
 
-          if (tracker.data && tracker.data_len > 0) {
-            const fields = new Parser()
-              .array('fields', {
-                type: PSN_DATA_TRACKER_FIELD_PARSER,
-                lengthInBytes: tracker.data_len,
-              })
-              .parse(tracker.data);
-            if (fields.fields) {
-              fields.fields.forEach((field) => {
-                if (field.data) {
-                  this.data.trackers[tracker.id] = {
-                    ...this.data.trackers[tracker.id],
-                    ...field.data,
-                  };
-                }
-              });
-            }
-            tracker.fields = fields.fields;
-            delete tracker.data;
+          if (this.dataPacketFrames[currentDataPacketHeader.frame_id] === undefined) {
+            this.dataPacketFrames[currentDataPacketHeader.frame_id] = [];
           }
-        });
+          this.dataPacketFrames[currentDataPacketHeader.frame_id].push(dataPacket);
+
+          if (
+            this.dataPacketFrames[currentDataPacketHeader.frame_id].length ===
+            currentDataPacketHeader.frame_packet_count
+          ) {
+            console.log('found complete data frame');
+            this.updateData(this.dataPacketFrames[currentDataPacketHeader.frame_id]);
+            delete this.dataPacketFrames[currentDataPacketHeader.frame_id];
+          } else {
+            // TODO(jwetzell): need to compute whether a frame is complete
+            console.log('compute data frame completion');
+          }
+
+          this.lastDataPacketHeader = currentDataPacketHeader;
+        }
       }
     }
-    return packet;
+    console.log(this);
   }
 }
 

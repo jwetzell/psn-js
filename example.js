@@ -6,13 +6,10 @@ const client = dgram.createSocket('udp4');
 const psnDecoder = new Decoder();
 
 client.on('listening', () => {
-  const address = client.address();
-  client.setBroadcast(true);
-  client.setMulticastTTL(128);
   client.addMembership('236.10.10.10');
 });
 
-client.on('message', (message, remote) => {
+client.on('message', (message) => {
   psnDecoder.decode(message);
 });
 
