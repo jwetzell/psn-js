@@ -25,7 +25,7 @@ class Decoder {
   }
 
   updateInfo(framePackets) {
-    console.log('info update');
+    // console.log('info update');
     framePackets.forEach((packet) => {
       packet.subChunks?.forEach((subChunk) => {
         if (subChunk.id === 0x0001) {
@@ -44,7 +44,7 @@ class Decoder {
   }
 
   updateData(framePackets) {
-    console.log('data update');
+    // console.log('data update');
     framePackets.forEach((packet) => {
       packet.subChunks?.forEach((subChunk) => {
         if (subChunk.id === 0x0001) {
@@ -92,12 +92,12 @@ class Decoder {
             this.infoPacketFrames[currentInfoPacketHeader.frame_id].length ===
             currentInfoPacketHeader.frame_packet_count
           ) {
-            console.log('found complete info frame');
+            // console.log('found complete info frame');
             this.updateInfo(this.infoPacketFrames[currentInfoPacketHeader.frame_id]);
             delete this.infoPacketFrames[currentInfoPacketHeader.frame_id];
           } else {
             // TODO(jwetzell): need to compute whether a frame is complete
-            console.log('compute frame completion');
+            // console.log('compute frame completion');
           }
 
           this.lastInfoPacketHeader = currentInfoPacketHeader;
@@ -123,19 +123,18 @@ class Decoder {
             this.dataPacketFrames[currentDataPacketHeader.frame_id].length ===
             currentDataPacketHeader.frame_packet_count
           ) {
-            console.log('found complete data frame');
+            // console.log('found complete data frame');
             this.updateData(this.dataPacketFrames[currentDataPacketHeader.frame_id]);
             delete this.dataPacketFrames[currentDataPacketHeader.frame_id];
           } else {
             // TODO(jwetzell): need to compute whether a frame is complete
-            console.log('compute data frame completion');
+            // console.log('compute data frame completion');
           }
 
           this.lastDataPacketHeader = currentDataPacketHeader;
         }
       }
     }
-    console.log(this);
   }
 }
 
