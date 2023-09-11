@@ -95,9 +95,6 @@ class Decoder {
             // console.log('found complete info frame');
             this.updateInfo(this.infoPacketFrames[currentInfoPacketHeader.frame_id]);
             delete this.infoPacketFrames[currentInfoPacketHeader.frame_id];
-          } else {
-            // TODO(jwetzell): need to compute whether a frame is complete
-            // console.log('compute frame completion');
           }
 
           this.lastInfoPacketHeader = currentInfoPacketHeader;
@@ -126,9 +123,6 @@ class Decoder {
             // console.log('found complete data frame');
             this.updateData(this.dataPacketFrames[currentDataPacketHeader.frame_id]);
             delete this.dataPacketFrames[currentDataPacketHeader.frame_id];
-          } else {
-            // TODO(jwetzell): need to compute whether a frame is complete
-            // console.log('compute data frame completion');
           }
 
           this.lastDataPacketHeader = currentDataPacketHeader;
