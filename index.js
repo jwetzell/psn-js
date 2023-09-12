@@ -6,10 +6,6 @@ const DATA_PACKET = 0x6755;
 const INFO_PACKET = 0x6756;
 
 class Decoder {
-  lastInfoPacketHeader;
-
-  lastDataPacketHeader;
-
   infoPacketFrames = {};
 
   dataPacketFrames = {};
@@ -96,8 +92,6 @@ class Decoder {
             this.updateInfo(this.infoPacketFrames[currentInfoPacketHeader.frame_id]);
             delete this.infoPacketFrames[currentInfoPacketHeader.frame_id];
           }
-
-          this.lastInfoPacketHeader = currentInfoPacketHeader;
         }
       }
     } else if (packet.id === DATA_PACKET) {
@@ -124,8 +118,6 @@ class Decoder {
             this.updateData(this.dataPacketFrames[currentDataPacketHeader.frame_id]);
             delete this.dataPacketFrames[currentDataPacketHeader.frame_id];
           }
-
-          this.lastDataPacketHeader = currentDataPacketHeader;
         }
       }
     }
