@@ -35,9 +35,32 @@ class DataPacket {
                   })
                   .parse(tracker.data);
                 if (fields.fields) {
-                  tracker.fields = [];
                   fields.fields.forEach((field) => {
-                    tracker.fields.push(field.data);
+                    switch (field.id) {
+                      case 0x0000:
+                        tracker.pos = field.data;
+                        break;
+                      case 0x0001:
+                        tracker.speed = field.data;
+                        break;
+                      case 0x0002:
+                        tracker.ori = field.data;
+                        break;
+                      case 0x0003:
+                        tracker.status = field.data;
+                        break;
+                      case 0x0004:
+                        tracker.accel = field.data;
+                        break;
+                      case 0x0005:
+                        tracker.trgtpos = field.data;
+                        break;
+                      case 0x0006:
+                        tracker.timestamp = field.data;
+                        break;
+                      default:
+                        break;
+                    }
                   });
                 }
               }

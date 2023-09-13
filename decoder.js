@@ -47,11 +47,15 @@ class Decoder {
             if (this.data.trackers[tracker.id] === undefined) {
               this.data.trackers[tracker.id] = {};
             }
-            tracker.fields?.forEach((field) => {
-              Object.entries(field).forEach(([key, value]) => {
-                this.data.trackers[tracker.id][key] = value;
-              });
-            });
+            this.data.trackers[tracker.id] = {
+              pos: tracker.pos,
+              speed: tracker.speed,
+              ori: tracker.ori,
+              status: tracker.status,
+              accel: tracker.accel,
+              trgtpos: tracker.trgtpos,
+              timestamp: tracker.timestamp,
+            };
           });
         }
       });
