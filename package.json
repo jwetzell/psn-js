@@ -1,12 +1,18 @@
 {
   "name": "@jwetzell/posistagenet",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "example:client": "node examples/psn_client.js",
+    "example:server": "node examples/psn_server.js"
   },
-  "author": "",
+  "author": {
+    "name": "Joel Wetzell",
+    "email": "me@jwetzell.com",
+    "url": "https://jwetzell.com"
+  },
+  "repository": "https://github.com/jwetzell/psn-js",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^8.48.0",
