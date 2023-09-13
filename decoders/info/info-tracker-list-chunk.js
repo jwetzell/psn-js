@@ -1,6 +1,6 @@
 const Parser = require('binary-parser').Parser;
 
-const PSN_INFO_TRACKER_NAME_PARSER = new Parser()
+const infoTrackerNameParser = new Parser()
   .uint16le('id')
   .uint16le('data_len', {
     formatter: (item) => {
@@ -17,7 +17,7 @@ const PSN_INFO_TRACKER_NAME_PARSER = new Parser()
   })
   .string('tracker_name', { length: 'data_len' });
 
-const PSN_INFO_TRACKER_PARSER = new Parser()
+const infoTrackerParser = new Parser()
   .uint16le('id')
   .uint16le('data_len', {
     formatter: (item) => {
@@ -33,14 +33,7 @@ const PSN_INFO_TRACKER_PARSER = new Parser()
     },
   })
   .nest('tracker_name', {
-    type: PSN_INFO_TRACKER_NAME_PARSER,
+    type: infoTrackerNameParser,
   });
 
-const InfoSystemNameParser = new Parser().string('system_name', { greedy: true });
-
-const InfoTrackerListParser = new Parser().array('trackers', { type: PSN_INFO_TRACKER_PARSER, readUntil: 'eof' });
-
-module.exports = {
-  InfoSystemNameParser,
-  InfoTrackerListParser,
-};
+module.exports = new Parser().array('trackers', { type: infoTrackerParser, readUntil: 'eof' });

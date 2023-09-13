@@ -1,6 +1,6 @@
 const Parser = require('binary-parser').Parser;
 
-const DataTrackerFieldParser = new Parser()
+module.exports = new Parser()
   .uint16le('id')
   .uint16le('data_len', {
     formatter: (item) => {
@@ -27,29 +27,3 @@ const DataTrackerFieldParser = new Parser()
       0x0006: new Parser().uint64le('tracker_timestamp'),
     },
   });
-
-const PSN_DATA_TRACKER_PARSER = new Parser()
-  .uint16le('id')
-  .uint16le('data_len', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return Number.parseInt(binary.substring(1), 2);
-    },
-  })
-  .seek(-2)
-  .uint16le('has_subchunks', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return binary.charAt(0) === '1';
-    },
-  })
-  .buffer('data', {
-    length: 'data_len',
-  });
-
-const DataTrackerListParser = new Parser().array('trackers', { type: PSN_DATA_TRACKER_PARSER, readUntil: 'eof' });
-
-module.exports = {
-  DataTrackerFieldParser,
-  DataTrackerListParser,
-};

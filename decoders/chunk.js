@@ -1,6 +1,6 @@
-const Parser = require('binary-parser').Parser;
+const { Parser } = require('binary-parser');
 
-const PSN_PACKET_PARSER = new Parser()
+module.exports = new Parser()
   .uint16le('id')
   .uint16le('data_len', {
     formatter: (item) => {
@@ -15,6 +15,6 @@ const PSN_PACKET_PARSER = new Parser()
       return binary.charAt(0) === '1';
     },
   })
-  .buffer('chunk_data', { readUntil: 'eof' });
-
-module.exports = (buffer) => PSN_PACKET_PARSER.parse(buffer);
+  .buffer('chunk_data', {
+    length: 'data_len',
+  });

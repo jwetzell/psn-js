@@ -1,6 +1,5 @@
 const { Parser } = require('binary-parser');
-const { ChunkParser, HeaderParser } = require('../parsers/common');
-const { InfoSystemNameParser, InfoTrackerListParser } = require('../parsers/info');
+const Decoders = require('../../decoders');
 
 class InfoPacket {
   constructor(packet) {
@@ -8,7 +7,7 @@ class InfoPacket {
     this.subChunks = [];
     if (this.packet.has_subchunks) {
       this.subChunkParser = new Parser().array('chunks', {
-        type: ChunkParser,
+        type: Decoders.Chunk,
         lengthInBytes: this.packet.data_len,
       });
       this.subChunks = this.subChunkParser.parse(this.packet.chunk_data)?.chunks;
@@ -19,19 +18,19 @@ class InfoPacket {
           case 0:
             populatedSubChunk = {
               ...subChunk,
-              ...HeaderParser.parse(subChunk.chunk_data),
+              ...Decoders.PacketHeaderChunk.parse(subChunk.chunk_data),
             };
             break;
           case 1:
             populatedSubChunk = {
               ...subChunk,
-              ...InfoSystemNameParser.parse(subChunk.chunk_data),
+              ...Decoders.Info.SystemNameChunk.parse(subChunk.chunk_data),
             };
             break;
           case 2:
             populatedSubChunk = {
               ...subChunk,
-              ...InfoTrackerListParser.parse(subChunk.chunk_data),
+              ...Decoders.Info.TrackerListChunk.parse(subChunk.chunk_data),
             };
             break;
           default:

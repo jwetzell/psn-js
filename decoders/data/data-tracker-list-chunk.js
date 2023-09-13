@@ -1,6 +1,6 @@
 const Parser = require('binary-parser').Parser;
 
-const ChunkParser = new Parser()
+const dataTrackerParser = new Parser()
   .uint16le('id')
   .uint16le('data_len', {
     formatter: (item) => {
@@ -15,19 +15,8 @@ const ChunkParser = new Parser()
       return binary.charAt(0) === '1';
     },
   })
-  .buffer('chunk_data', {
+  .buffer('data', {
     length: 'data_len',
   });
 
-const HeaderParser = new Parser()
-  .uint64le('packet_timestamp')
-  .uint8('version_high')
-  .uint8('version_low')
-  .uint8('frame_id')
-  .uint8('frame_packet_count')
-  .seek(4);
-
-module.exports = {
-  ChunkParser,
-  HeaderParser,
-};
+module.exports = new Parser().array('trackers', { type: dataTrackerParser, readUntil: 'eof' });
