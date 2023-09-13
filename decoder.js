@@ -22,14 +22,12 @@ class Decoder {
   }
 
   updateInfo(framePackets) {
-    // console.log('info update');
     framePackets.forEach((packet) => {
       packet.subChunks?.forEach((subChunk) => {
         if (subChunk.id === 0x0001) {
           // NOTE(jwetzell): system name subChunk
           this.info.system_name = subChunk.system_name;
         } else if (subChunk.id === 0x0002) {
-          //   console.log(subChunk);
           subChunk.trackers?.forEach((tracker) => {
             if (this.info.trackers[tracker.id] === undefined) {
               this.info.trackers[tracker.id] = {};
@@ -42,7 +40,6 @@ class Decoder {
   }
 
   updateData(framePackets) {
-    // console.log('data update');
     framePackets.forEach((packet) => {
       packet.subChunks?.forEach((subChunk) => {
         if (subChunk.id === 0x0001) {
@@ -61,24 +58,21 @@ class Decoder {
     });
   }
 
-  // TODO(jwetzell): support multiple frame packets this might require some rework of how chunks are assumed
+  // TODO(jwetzell): add invalid frame id decoding. Scenario where a frame id is reused before one is complete
   decode(packetBuf) {
     const packet = PacketParser.parse(packetBuf);
-    // console.log(packet);
 
     if (packet.id === 0x6756) {
       const infoPacket = new InfoPacket(packet);
       if (infoPacket) {
         if (infoPacket.subChunks?.length > 0) {
           const currentInfoPacketHeader = infoPacket.getHeaderPacket();
-          // console.log(currentInfoPacketHeader);
           if (!currentInfoPacketHeader) {
             // NOTE(jwetzell): not sure that info packets without a header subchunk are valid?
             return;
           }
 
           const systemSubChunk = infoPacket.getSystemPacket();
-          // console.log(systemSubChunk);
           if (!systemSubChunk) {
             // NOTE(jwetzell): not sure that info packets without a system subchunk are valid?
             return;
@@ -93,12 +87,8 @@ class Decoder {
             this.infoPacketFrames[currentInfoPacketHeader.frame_id].length ===
             currentInfoPacketHeader.frame_packet_count
           ) {
-            // console.log('found complete info frame');
             this.updateInfo(this.infoPacketFrames[currentInfoPacketHeader.frame_id]);
             delete this.infoPacketFrames[currentInfoPacketHeader.frame_id];
-          } else {
-            // TODO(jwetzell): need to compute whether a frame is complete
-            // console.log('compute frame completion');
           }
 
           this.lastInfoPacketHeader = currentInfoPacketHeader;
@@ -106,13 +96,11 @@ class Decoder {
       }
     } else if (packet.id === 0x6755) {
       const dataPacket = new DataPacket(packet);
-      //   console.log(dataPacket);
       if (dataPacket) {
         if (dataPacket.subChunks?.length > 0) {
           const currentDataPacketHeader = dataPacket.getHeaderPacket();
           if (!currentDataPacketHeader) {
             // NOTE(jwetzell): not sure that info packets without a header subchunk are valid?
-            console.error('data packet with no header');
             return;
           }
 
@@ -127,9 +115,6 @@ class Decoder {
           ) {
             this.updateData(this.dataPacketFrames[currentDataPacketHeader.frame_id]);
             delete this.dataPacketFrames[currentDataPacketHeader.frame_id];
-          } else {
-            // TODO(jwetzell): need to compute whether a frame is complete
-            // console.log('compute data frame completion');
           }
 
           this.lastDataPacketHeader = currentDataPacketHeader;
