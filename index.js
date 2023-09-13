@@ -1,6 +1,6 @@
-const Decoder = require('./decoder.js');
-const Encoder = require('./encoder.js');
-const Tracker = require('./models/tracker.js');
+const Decoder = require('./src/decoder.js');
+const Encoder = require('./src/encoder.js');
+const Tracker = require('./src/models/tracker.js');
 
 module.exports = {
   Encoder,

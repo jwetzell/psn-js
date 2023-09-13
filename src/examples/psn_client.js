@@ -1,5 +1,5 @@
 const dgram = require('dgram');
-const Decoder = require('../decoder');
+const Decoder = require('../../decoder');
 
 const client = dgram.createSocket('udp4');
 const decoder = new Decoder();

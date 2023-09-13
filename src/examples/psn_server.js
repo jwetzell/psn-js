@@ -1,5 +1,5 @@
 const dgram = require('dgram');
-const Encoder = require('../encoder');
+const Encoder = require('../../encoder');
 const Tracker = require('../models/tracker');
 
 const client = dgram.createSocket('udp4');
