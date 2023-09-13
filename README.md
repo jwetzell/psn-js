@@ -1,4 +1,7 @@
+![npm](https://img.shields.io/npm/v/%40jwetzell%2Fposistagenet)
 # psn-js
+js implementation of the [PosiStageNet protocol](https://github.com/vyv/psn-cpp/blob/master/doc/PosiStageNetprotocol_v2.03_2019_09_09.pdf)
+
 
 ## Install
 `npm install --save @jwetzell/posistagenet`
