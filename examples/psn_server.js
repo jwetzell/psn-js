@@ -1,6 +1,5 @@
 const dgram = require('dgram');
-const Encoder = require('../../encoder');
-const Tracker = require('../models/tracker');
+const { Encoder, Tracker } = require('..');
 
 const client = dgram.createSocket('udp4');
 const encoder = new Encoder('Test PSN Server', 2, 0);
