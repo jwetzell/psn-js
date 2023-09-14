@@ -5,9 +5,8 @@ module.exports = (id, chunkData, hasSubchunks) => {
 
   const header = Buffer.alloc(4);
   header.writeUInt16LE(id);
-  const chunkLengthBinaryString = chunkData.length.toString(2).padStart(15, '0');
-  const secondByteBinary = `${hasSubchunks ? '1' : '0'}${chunkLengthBinaryString}`;
-  header.writeUInt16LE(parseInt(secondByteBinary, 2), 2);
+  const hasSubChunksBit = (hasSubchunks ? 1 : 0) << 15;
+  header.writeUInt16LE(hasSubChunksBit + chunkData.length, 2);
 
   return Buffer.concat([header, chunkData]);
 };
