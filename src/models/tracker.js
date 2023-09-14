@@ -10,6 +10,11 @@ const infoTrackerChunk = require('../encoders/info/info-tracker-chunk');
 const infoTrackerNameChunk = require('../encoders/info/info-tracker-name-chunk');
 
 class Tracker {
+  /**
+   * @constructor
+   * @param {number} id - tracker id
+   * @param {string} name - tracker name
+   */
   constructor(id, name) {
     this.id = id;
     this.name = name;
@@ -22,30 +27,61 @@ class Tracker {
     this.timestamp = undefined;
   }
 
+  /**
+   * @param {float} x
+   * @param {float} y
+   * @param {float} z
+   */
   setPos(x, y, z) {
     this.pos = [x, y, z];
   }
 
+  /**
+   * @param {float} x
+   * @param {float} y
+   * @param {float} z
+   */
   setSpeed(x, y, z) {
     this.speed = [x, y, z];
   }
 
+  /**
+   * @param {float} x
+   * @param {float} y
+   * @param {float} z
+   */
   setOri(x, y, z) {
     this.ori = [x, y, z];
   }
 
+  /**
+   * @param {float} validity
+   */
   setStatus(validity) {
     this.validity = validity;
   }
 
+  /**
+   * @param {float} x
+   * @param {float} y
+   * @param {float} z
+   */
   setAccel(x, y, z) {
     this.accel = [x, y, z];
   }
 
+  /**
+   * @param {float} x
+   * @param {float} y
+   * @param {float} z
+   */
   setTrgtPos(x, y, z) {
     this.trgtpos = [x, y, z];
   }
 
+  /**
+   * @param {BigInt} timestamp
+   */
   setTimestamp(timestamp) {
     this.timestamp = timestamp;
   }
