@@ -25,7 +25,7 @@ class DataPacket {
             };
             break;
           case 1:
-            const dataTrackerList = Decoders.Data.TrackerListChunk.parse(subChunk.chunk_data);
+            const dataTrackerList = Decoders.Data.TrackerListChunk(subChunk.chunk_data);
             dataTrackerList.trackers?.forEach((tracker) => {
               if (tracker.data && tracker.data_len > 0) {
                 const fields = new Parser()

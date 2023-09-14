@@ -1,22 +1,24 @@
-const Parser = require('binary-parser').Parser;
+module.exports = (buffer) => {
+  const trackerList = {
+    trackers: [],
+  };
 
-const dataTrackerParser = new Parser()
-  .uint16le('id')
-  .uint16le('data_len', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return Number.parseInt(binary.substring(1), 2);
-    },
-  })
-  .seek(-2)
-  .uint16le('has_subchunks', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return binary.charAt(0) === '1';
-    },
-  })
-  .buffer('data', {
-    length: 'data_len',
-  });
+  // TODO(jwetzell): add error handling
+  let offset = 0;
+  while (offset < buffer.length) {
+    const trackerChunk = {};
+    trackerChunk.id = buffer.readUInt16LE(offset);
+    offset += 2;
 
-module.exports = new Parser().array('trackers', { type: dataTrackerParser, readUntil: 'eof' });
+    // NOTE(jwetzell): this data is split up as 1 bit for has_subchunks and 15 bits for the data_len
+    const tempBytesAsBinary = buffer.readUInt16LE(offset).toString(2);
+    trackerChunk.has_subchunks = tempBytesAsBinary.charAt(0) === '0';
+    trackerChunk.data_len = parseInt(tempBytesAsBinary.substring(1), 2);
+    offset += 2;
+    trackerChunk.data = buffer.subarray(offset, offset + trackerChunk.data_len);
+    offset += trackerChunk.data_len;
+    trackerList.trackers.push(trackerChunk);
+  }
+
+  return trackerList;
+};
