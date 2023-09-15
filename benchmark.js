@@ -1,4 +1,4 @@
-const { Encoder, Decoder, Tracker } = require('.');
+const { Encoder, Tracker } = require('./dist');
 
 const testSizes = [1, 10, 100];
 

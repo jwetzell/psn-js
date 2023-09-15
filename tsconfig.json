@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "target": "es2016",
+    "declaration": true,
+    "moduleResolution": "node",
+    "rootDir": "./src",
+    "strict": true,
+    "outDir": "dist"
+  },
+  "exclude": ["node_modules", "dist", "examples"]
+}

@@ -1,12 +1,18 @@
 {
   "name": "@jwetzell/posistagenet",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc",
     "example:client": "node examples/psn_client.js",
-    "example:server": "node examples/psn_server.js"
+    "example:server": "node examples/psn_server.js",
+    "prepublishOnly": "npm run build"
   },
+  "files": [
+    "dist"
+  ],
   "author": {
     "name": "Joel Wetzell",
     "email": "me@jwetzell.com",
@@ -15,9 +21,12 @@
   "repository": "https://github.com/jwetzell/psn-js",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^20.6.0",
     "eslint": "^8.48.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.0.0",
-    "prettier": "^3.0.3"
+    "prettier": "^3.0.3",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.2.2"
   }
 }
