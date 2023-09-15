@@ -1,29 +1,43 @@
-const Parser = require('binary-parser').Parser;
+/* eslint-disable no-case-declarations */
+const chunk = require('../chunk');
 
-module.exports = new Parser()
-  .uint16le('id')
-  .uint16le('data_len', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return Number.parseInt(binary.substring(1), 2);
-    },
-  })
-  .seek(-2)
-  .uint16le('has_subchunks', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return binary.charAt(0) === '1';
-    },
-  })
-  .choice('data', {
-    tag: 'id',
-    choices: {
-      0x0000: new Parser().floatle('x').floatle('y').floatle('z'),
-      0x0001: new Parser().floatle('x').floatle('y').floatle('z'),
-      0x0002: new Parser().floatle('x').floatle('y').floatle('z'),
-      0x0003: new Parser().floatle('validity'),
-      0x0004: new Parser().floatle('x').floatle('y').floatle('z'),
-      0x0005: new Parser().floatle('x').floatle('y').floatle('z'),
-      0x0006: new Parser().uint64le('tracker_timestamp'),
-    },
-  });
+function readXYZ(trackerFieldChunk, prefix) {
+  if (prefix === undefined) {
+    prefix = '';
+  }
+
+  trackerFieldChunk[`${prefix}x`] = trackerFieldChunk.chunk_data.readFloatLE(0);
+  trackerFieldChunk[`${prefix}y`] = trackerFieldChunk.chunk_data.readFloatLE(4);
+  trackerFieldChunk[`${prefix}z`] = trackerFieldChunk.chunk_data.readFloatLE(8);
+}
+function decodeTrackerFieldChunk(trackerFieldChunk) {
+  if (trackerFieldChunk.id !== undefined) {
+    switch (trackerFieldChunk.id) {
+      case 0x0000:
+        readXYZ(trackerFieldChunk, 'pos_');
+        break;
+      case 0x0001:
+        readXYZ(trackerFieldChunk, 'speed_');
+        break;
+      case 0x0002:
+        readXYZ(trackerFieldChunk, 'ori_');
+        break;
+      case 0x0003:
+        trackerFieldChunk.validity = trackerFieldChunk.chunk_data.readFloatLE();
+        break;
+      case 0x0004:
+        readXYZ(trackerFieldChunk, 'accel_');
+        break;
+      case 0x0005:
+        readXYZ(trackerFieldChunk, 'trgtpos_');
+        break;
+      case 0x0006:
+        trackerFieldChunk.tracker_timestamp = trackerFieldChunk.chunk_data.readBigUInt64LE();
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+module.exports = (buffer) => chunk(buffer, decodeTrackerFieldChunk);

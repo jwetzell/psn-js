@@ -1,39 +1,17 @@
-const Parser = require('binary-parser').Parser;
+const { CHUNK_HEADER_SIZE } = require('../../constants');
+const chunk = require('../chunk');
+const infoTrackerChunk = require('./info-tracker-chunk');
 
-const infoTrackerNameParser = new Parser()
-  .uint16le('id')
-  .uint16le('data_len', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return Number.parseInt(binary.substring(1), 2);
-    },
-  })
-  .seek(-2)
-  .uint16le('has_subchunks', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return binary.charAt(0) === '1';
-    },
-  })
-  .string('tracker_name', { length: 'data_len' });
-
-const infoTrackerParser = new Parser()
-  .uint16le('id')
-  .uint16le('data_len', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return Number.parseInt(binary.substring(1), 2);
-    },
-  })
-  .seek(-2)
-  .uint16le('has_subchunks', {
-    formatter: (item) => {
-      const binary = item.toString(2).padStart(16, '0');
-      return binary.charAt(0) === '1';
-    },
-  })
-  .nest('tracker_name', {
-    type: infoTrackerNameParser,
-  });
-
-module.exports = new Parser().array('trackers', { type: infoTrackerParser, readUntil: 'eof' });
+function decodeInfoTrackerListChunk(infoTrackerListChunk) {
+  infoTrackerListChunk.trackers = {};
+  if (infoTrackerListChunk.has_subchunks && infoTrackerListChunk.chunk_data) {
+    let offset = 0;
+    while (offset < infoTrackerListChunk.data_len) {
+      const trackerChunk = infoTrackerChunk(infoTrackerListChunk.chunk_data.subarray(offset));
+      offset += CHUNK_HEADER_SIZE;
+      offset += trackerChunk.data_len;
+      infoTrackerListChunk.trackers[trackerChunk.id] = trackerChunk;
+    }
+  }
+}
+module.exports = (buffer) => chunk(buffer, decodeInfoTrackerListChunk);

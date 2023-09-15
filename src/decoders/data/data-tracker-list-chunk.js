@@ -1,24 +1,17 @@
-module.exports = (buffer) => {
-  const trackerList = {
-    trackers: [],
-  };
+const { CHUNK_HEADER_SIZE } = require('../../constants');
+const chunk = require('../chunk');
+const dataTrackerChunk = require('./data-tracker-chunk');
+
+function decodeDataTrackerListChunk(dataTrackerListChunk) {
+  dataTrackerListChunk.trackers = {};
 
   // TODO(jwetzell): add error handling
   let offset = 0;
-  while (offset < buffer.length) {
-    const trackerChunk = {};
-    trackerChunk.id = buffer.readUInt16LE(offset);
-    offset += 2;
-
-    // NOTE(jwetzell): this data is split up as 1 bit for has_subchunks and 15 bits for the data_len
-    const tempBytesAsBinary = buffer.readUInt16LE(offset).toString(2);
-    trackerChunk.has_subchunks = tempBytesAsBinary.charAt(0) === '0';
-    trackerChunk.data_len = parseInt(tempBytesAsBinary.substring(1), 2);
-    offset += 2;
-    trackerChunk.data = buffer.subarray(offset, offset + trackerChunk.data_len);
+  while (offset < dataTrackerListChunk.chunk_data.length) {
+    const trackerChunk = dataTrackerChunk(dataTrackerListChunk.chunk_data.subarray(offset));
+    offset += CHUNK_HEADER_SIZE;
     offset += trackerChunk.data_len;
-    trackerList.trackers.push(trackerChunk);
+    dataTrackerListChunk.trackers[trackerChunk.id] = trackerChunk;
   }
-
-  return trackerList;
-};
+}
+module.exports = (buffer) => chunk(buffer, decodeDataTrackerListChunk);

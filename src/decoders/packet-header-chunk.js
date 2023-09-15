@@ -1,9 +1,12 @@
-const Parser = require('binary-parser').Parser;
+const chunk = require('./chunk');
 
-module.exports = new Parser()
-  .uint64le('packet_timestamp')
-  .uint8('version_high')
-  .uint8('version_low')
-  .uint8('frame_id')
-  .uint8('frame_packet_count')
-  .seek(4);
+function decodePacketHeaderChunk(packetHeaderChunk) {
+  // TODO(jwetzell): remove the string conversion
+  packetHeaderChunk.packet_timestamp = packetHeaderChunk.chunk_data.readBigUInt64LE(0);
+  packetHeaderChunk.version_high = packetHeaderChunk.chunk_data.readUInt8(8);
+  packetHeaderChunk.version_low = packetHeaderChunk.chunk_data.readUInt8(9);
+  packetHeaderChunk.frame_id = packetHeaderChunk.chunk_data.readUInt8(10);
+  packetHeaderChunk.frame_packet_count = packetHeaderChunk.chunk_data.readUInt8(11);
+}
+
+module.exports = (buffer) => chunk(buffer, decodePacketHeaderChunk);

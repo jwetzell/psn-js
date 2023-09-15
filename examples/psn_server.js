@@ -1,8 +1,10 @@
+// recreation of psn_server.cpp example from https://github.com/vyv/psn-cpp
 const dgram = require('dgram');
-const { Encoder, Tracker } = require('..');
+const { Encoder, Tracker, Decoder } = require('..');
 
 const client = dgram.createSocket('udp4');
 const encoder = new Encoder('Test PSN Server', 2, 0);
+const decoder = new Decoder();
 
 const trackers = [];
 
@@ -22,7 +24,7 @@ const distFromSun = [0, 0.58, 1.08, 1.5, 2.28, 7.78, 14.29, 28.71, 45.04, 59.13]
 
 let timestamp = 0;
 setInterval(() => {
-  for (let index = 0; index < trackers.length; index += 1) {
+  orbits.forEach((orbit, index) => {
     const a = 1.0 / orbits[index];
     const b = distFromSun[index];
     const x = timestamp;
@@ -36,19 +38,27 @@ setInterval(() => {
     trackers[index].setTrgtPos(3, 14, 16);
     trackers[index].setStatus(index / 10.0);
     trackers[index].setTimestamp(timestamp);
-  }
+  });
 
   const dataPackets = encoder.getDataPackets(timestamp, trackers);
-
-  dataPackets.forEach((packet) => {
+  dataPackets.forEach((packet, index) => {
+    const decodedPacket = decoder.decode(packet);
+    console.log(
+      `Sending PSN_DATA_PACKET : Frame Id = ${decodedPacket.packet_header.frame_id} , Packet Count = ${index + 1}`
+    );
     client.send(packet, 56565, '236.10.10.10');
   });
   timestamp += 1;
-}, 20);
+}, 5);
 
 setInterval(() => {
   const infoPackets = encoder.getInfoPackets(timestamp, trackers);
-  infoPackets.forEach((packet) => {
+  infoPackets.forEach((packet, index) => {
+    const decodedPacket = decoder.decode(packet);
+    console.log(
+      `Sending PSN_INFO_PACKET : Frame Id = ${decodedPacket.packet_header.frame_id} , Packet Count = ${index + 1}`
+    );
+
     client.send(packet, 56565, '236.10.10.10');
   });
-}, 1000);
+}, 500);

@@ -13,15 +13,18 @@ js implementation of the [PosiStageNet protocol](https://github.com/vyv/psn-cpp/
 const { Decoder } = require('@jwetzell/posistagenet')
 const decoder = new Decoder()
 
-const buffer = Buffer.from('source PSN packets from somewhere')
+const infoPacketBuffer = Buffer.from('5667348000000c0001000000000000000203010101000b00536572766572204e616d650200118001000d8000000900547261636b65722031','hex')
+const dataPacketBuffer = Buffer.from('5567288000000c00010000000000000002030101010014800100108000000c000000803f0000803f0000803f','hex')
 
-decoder.decode(buffer)
+decoder.decode(infoPacketBuffer)
+decoder.decode(dataPacketBuffer)
 
-// data from PSN Info packets
-console.log(decoder.info)
+// the system_name from info packets if available
+console.log(decoder.system_name)
 
-// data from PSN Data packets
-console.log(decoder.data)
+// map of trackers populated with any data that has been received
+// this merges both info and data packet properties into one
+console.log(decoder.trackers)
 
 ```
 
@@ -56,3 +59,6 @@ infoPackets.forEach((infoPacket)=>{
 
 ```
   
+## Notes
+- UInt64
+  - PosiStageNet uses 64 bit UInt's for timestamp values make sure to use [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) if using values over `Number.MAX_SAFE_INTEGER`
