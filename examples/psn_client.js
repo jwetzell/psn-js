@@ -1,6 +1,6 @@
 // recreation of psn_client.cpp example from https://github.com/vyv/psn-cpp
 const dgram = require('dgram');
-const { Decoder } = require('..');
+const { Decoder } = require('../dist');
 
 const client = dgram.createSocket('udp4');
 const decoder = new Decoder();
@@ -23,11 +23,8 @@ setInterval(() => {
   }
 
   Object.entries(decoder.trackers).forEach(([trackerId, tracker]) => {
-    console.log(
-      `Tracker - id: ${trackerId} | name: ${
-        decoder.trackers[trackerId]?.tracker_name ? decoder.trackers[trackerId]?.tracker_name : ''
-      }`
-    );
+    const trackerName = decoder.trackers[trackerId]?.tracker_name?.tracker_name;
+    console.log(`Tracker - id: ${trackerId} | name: ${trackerName || ''}`);
     if (tracker.pos) {
       console.log(`\tpos: ${tracker.pos.pos_x}, ${tracker.pos.pos_y}, ${tracker.pos.pos_z}`);
     }

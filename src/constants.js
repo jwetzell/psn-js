@@ -1,5 +1,0 @@
-module.exports = {
-  PACKET_HEADER_SIZE: 16,
-  MAX_UDP_PACKET_SIZE: 1500,
-  CHUNK_HEADER_SIZE: 4,
-};
