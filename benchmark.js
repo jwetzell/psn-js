@@ -1,8 +1,9 @@
-const { Encoder, Tracker } = require('./dist');
+const { Encoder, Decoder, Tracker } = require('./dist');
 
-const testSizes = [1, 10, 100];
+const testSizes = [1, 10, 100, 1000];
 
 const encoder = new Encoder('test encoder', 2, 3);
+const decoder = new Decoder();
 
 function getNTrackers(n) {
   const trackers = [];
@@ -20,30 +21,50 @@ function getNTrackers(n) {
   return trackers;
 }
 
-// TODO(jwetzell): add decode
 function benchmark(trackerCount, iterations) {
   const benchmarkResults = {
-    encode: {},
+    data: {},
+    info: {},
   };
   const trackers = getNTrackers(trackerCount);
-
-  const dataEncoderStart = performance.now();
-  for (let index = 0; index < iterations; index += 1) {
-    encoder.getDataPackets(Date.now(), trackers);
-  }
-  benchmarkResults.encode.data = performance.now() - dataEncoderStart;
-
-  const infoEncoderStart = performance.now();
-
-  for (let index = 0; index < iterations; index += 1) {
-    encoder.getInfoPackets(Date.now(), trackers);
-  }
-  benchmarkResults.encode.info = performance.now() - infoEncoderStart;
   console.log(
-    `encoding ${trackers.length} tracker${trackers.length > 1 ? 's' : ''} ${iterations} time${
+    `processing ${trackers.length} tracker${trackers.length > 1 ? 's' : ''} ${iterations} time${
       iterations > 1 ? 's' : ''
     }`
   );
+
+  let latestEncodedPackets;
+
+  // DATA
+  const dataEncoderStart = performance.now();
+  for (let index = 0; index < iterations; index += 1) {
+    latestEncodedPackets = encoder.getDataPackets(Date.now(), trackers);
+  }
+  benchmarkResults.data.encode = `${(performance.now() - dataEncoderStart).toFixed(2)}ms`;
+
+  const dataDecodedStart = performance.now();
+  for (let index = 0; index < iterations; index += 1) {
+    latestEncodedPackets.forEach((packet) => {
+      decoder.decode(packet);
+    });
+  }
+  benchmarkResults.data.decode = `${(performance.now() - dataDecodedStart).toFixed(2)}ms`;
+
+  // INFO
+  const infoEncoderStart = performance.now();
+  for (let index = 0; index < iterations; index += 1) {
+    latestEncodedPackets = encoder.getInfoPackets(Date.now(), trackers);
+  }
+  benchmarkResults.info.encode = `${(performance.now() - infoEncoderStart).toFixed(2)}ms`;
+
+  const infoDecodeStart = performance.now();
+  for (let index = 0; index < iterations; index += 1) {
+    latestEncodedPackets.forEach((packet) => {
+      decoder.decode(packet);
+    });
+  }
+  benchmarkResults.info.decode = `${(performance.now() - infoDecodeStart).toFixed(2)}ms`;
+
   console.table(benchmarkResults);
 }
 
