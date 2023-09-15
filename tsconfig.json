@@ -2,9 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "commonjs",
-    "target": "es2016",
+    "target": "ES2020",
     "declaration": true,
-    "moduleResolution": "node",
     "rootDir": "./src",
     "strict": true,
     "outDir": "dist"
