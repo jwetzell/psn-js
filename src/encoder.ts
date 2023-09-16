@@ -1,12 +1,7 @@
 import { Tracker } from './models/tracker';
 
+import { Encoders } from '.';
 import { Constants } from './constants';
-import dataPacketChunk from './encoders/data/data-packet-chunk';
-import dataTrackerListChunk from './encoders/data/data-tracker-list-chunk';
-import infoPacketChunk from './encoders/info/info-packet-chunk';
-import infoSystemNameChunk from './encoders/info/info-system-name-chunk';
-import infoTrackerListChunk from './encoders/info/info-tracker-list-chunk';
-import packetHeaderChunk from './encoders/packet-header-chunk';
 
 export class Encoder {
   private systemName: string;
@@ -20,6 +15,25 @@ export class Encoder {
     this.versionLow = versionLow;
   }
 
+  setSystemName(systemName: string) {
+    this.systemName = systemName;
+  }
+  setVersionHigh(versionHigh: number) {
+    this.versionHigh = versionHigh;
+  }
+
+  setVersionLow(versionLow: number) {
+    this.versionLow = versionLow;
+  }
+
+  resetDataFrameId() {
+    this.dataFrameId = 1;
+  }
+
+  resetInfoFrameId() {
+    this.infoFrameId = 1;
+  }
+
   getInfoPackets(timestamp: bigint, trackers: Tracker[], frameId?: number) {
     if (frameId !== undefined) {
       if (!Number.isInteger(frameId)) {
@@ -31,7 +45,7 @@ export class Encoder {
       }
     }
 
-    const systemNameChunk = infoSystemNameChunk(this.systemName);
+    const systemNameChunk = Encoders.InfoSystemNameChunk(this.systemName);
 
     const trackerChunks = trackers.map((tracker: Tracker) => tracker.getInfoChunk());
 
@@ -52,7 +66,7 @@ export class Encoder {
       currentInfoPacketSize += trackerChunk.length;
     });
     trackerChunksLists.push(currentTrackerList);
-    const header = packetHeaderChunk(
+    const header = Encoders.PacketHeaderChunk(
       timestamp,
       this.versionHigh,
       this.versionLow,
@@ -60,7 +74,9 @@ export class Encoder {
       trackerChunksLists.length
     );
     trackerChunksLists.forEach((trackerChunkList) => {
-      infoPackets.push(infoPacketChunk(header, systemNameChunk, infoTrackerListChunk(trackerChunkList)));
+      infoPackets.push(
+        Encoders.InfoPacketChunk(header, systemNameChunk, Encoders.InfoTrackerListChunk(trackerChunkList))
+      );
     });
     this.infoFrameId += 1;
     if (this.infoFrameId > 255) {
@@ -99,7 +115,7 @@ export class Encoder {
     });
     trackerChunksLists.push(currentTrackerList);
 
-    const header = packetHeaderChunk(
+    const header = Encoders.PacketHeaderChunk(
       timestamp,
       this.versionHigh,
       this.versionLow,
@@ -107,7 +123,7 @@ export class Encoder {
       trackerChunksLists.length
     );
     trackerChunksLists.forEach((trackerChunks) => {
-      dataPackets.push(dataPacketChunk(header, dataTrackerListChunk(trackerChunks)));
+      dataPackets.push(Encoders.DataPacketChunk(header, Encoders.DataTrackerListChunk(trackerChunks)));
     });
     this.dataFrameId += 1;
     if (this.dataFrameId > 255) {

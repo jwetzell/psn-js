@@ -1,14 +1,7 @@
-import chunk, { Chunk } from './chunk';
-export interface PacketHeaderChunk extends Chunk {
-  packet_timestamp?: bigint;
-  version_high?: number;
-  version_low?: number;
-  frame_id?: number;
-  frame_packet_count?: number;
-}
+import { Decoders } from '.';
+import { PacketHeaderChunk } from '../models/packet-header-chunk';
 
 function decodePacketHeaderChunk(packetHeaderChunk: PacketHeaderChunk) {
-  // TODO(jwetzell): remove the string conversion
   if (packetHeaderChunk.chunk_data) {
     packetHeaderChunk.packet_timestamp = packetHeaderChunk.chunk_data.readBigUInt64LE(0);
     packetHeaderChunk.version_high = packetHeaderChunk.chunk_data.readUInt8(8);
@@ -18,4 +11,4 @@ function decodePacketHeaderChunk(packetHeaderChunk: PacketHeaderChunk) {
   }
 }
 
-export default (buffer: Buffer): PacketHeaderChunk => chunk(buffer, decodePacketHeaderChunk);
+export default (buffer: Buffer): PacketHeaderChunk => Decoders.Chunk(buffer, decodePacketHeaderChunk);

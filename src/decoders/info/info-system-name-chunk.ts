@@ -1,8 +1,5 @@
-import chunk, { Chunk } from '../chunk';
-
-export interface InfoSystemNameChunk extends Chunk {
-  system_name: string;
-}
+import { Decoders } from '..';
+import { InfoSystemNameChunk } from '../../models/info/info-system-name-chunk';
 
 function decodeSystemNameChunk(systemNameChunk: InfoSystemNameChunk) {
   if (systemNameChunk.chunk_data !== undefined && systemNameChunk.data_len !== undefined) {
@@ -10,4 +7,5 @@ function decodeSystemNameChunk(systemNameChunk: InfoSystemNameChunk) {
   }
 }
 
-export default (buffer: Buffer): InfoSystemNameChunk => chunk(buffer, decodeSystemNameChunk) as InfoSystemNameChunk;
+export default (buffer: Buffer): InfoSystemNameChunk =>
+  Decoders.Chunk(buffer, decodeSystemNameChunk) as InfoSystemNameChunk;

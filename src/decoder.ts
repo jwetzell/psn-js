@@ -1,8 +1,5 @@
-import { DataPacketChunk } from './decoders/data/data-packet-chunk';
-import { InfoPacketChunk } from './decoders/info/info-packet-chunk';
-import { InfoTrackerChunk } from './decoders/info/info-tracker-chunk';
-import packetDecoder from './decoders/packet';
-import { PacketHeaderChunk } from './decoders/packet-header-chunk';
+import { Decoders } from '.';
+import { DataPacketChunk, InfoPacketChunk, InfoTrackerChunk, PacketHeaderChunk } from './models';
 
 export class Decoder {
   // TODO(jwetzell): check if these last packet headers are necessary to hold on to
@@ -51,7 +48,7 @@ export class Decoder {
 
   // TODO(jwetzell): add invalid frame id decoding. Scenario where a frame id is reused before one is complete
   decode(packetBuf: Buffer): DataPacketChunk | InfoPacketChunk | undefined {
-    const packet = packetDecoder(packetBuf);
+    const packet = Decoders.Packet(packetBuf);
     if (packet === undefined) {
       return packet;
     }

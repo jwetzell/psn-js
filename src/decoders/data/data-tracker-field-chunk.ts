@@ -1,9 +1,7 @@
 /* eslint-disable no-case-declarations */
-import chunk, { Chunk } from '../chunk';
 
-export interface DataTrackerFieldChunk extends Chunk {
-  [key: string]: number | bigint | number[] | Buffer | undefined | boolean;
-}
+import { Decoders } from '..';
+import { DataTrackerFieldChunk } from '../../models/data/data-tracker-field-chunk';
 
 function readXYZ(trackerFieldChunk: DataTrackerFieldChunk, prefix: string = '') {
   if (trackerFieldChunk.chunk_data) {
@@ -47,4 +45,4 @@ function decodeTrackerFieldChunk(trackerFieldChunk: DataTrackerFieldChunk) {
 }
 
 export default (buffer: Buffer): DataTrackerFieldChunk =>
-  chunk(buffer, decodeTrackerFieldChunk) as DataTrackerFieldChunk;
+  Decoders.Chunk(buffer, decodeTrackerFieldChunk) as DataTrackerFieldChunk;

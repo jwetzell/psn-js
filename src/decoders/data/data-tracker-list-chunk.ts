@@ -1,12 +1,6 @@
+import { Decoders } from '..';
 import { Constants } from '../../constants';
-import chunk, { Chunk } from '../chunk';
-import dataTrackerChunk, { DataTrackerChunk } from './data-tracker-chunk';
-
-export interface DataTrackerListChunk extends Chunk {
-  trackers: {
-    [key: number]: DataTrackerChunk;
-  };
-}
+import { DataTrackerListChunk } from '../../models/data/data-tracker-list-chunk';
 
 function decodeDataTrackerListChunk(dataTrackerListChunk: DataTrackerListChunk) {
   dataTrackerListChunk.trackers = {};
@@ -15,7 +9,7 @@ function decodeDataTrackerListChunk(dataTrackerListChunk: DataTrackerListChunk) 
   let offset = 0;
   if (dataTrackerListChunk.chunk_data) {
     while (offset < dataTrackerListChunk.chunk_data.length) {
-      const trackerChunk = dataTrackerChunk(dataTrackerListChunk.chunk_data.subarray(offset));
+      const trackerChunk = Decoders.DataTrackerChunk(dataTrackerListChunk.chunk_data.subarray(offset));
       offset += Constants.CHUNK_HEADER_SIZE;
       if (trackerChunk.data_len) {
         offset += trackerChunk.data_len;
@@ -27,4 +21,4 @@ function decodeDataTrackerListChunk(dataTrackerListChunk: DataTrackerListChunk) 
   }
 }
 export default (buffer: Buffer): DataTrackerListChunk =>
-  chunk(buffer, decodeDataTrackerListChunk) as DataTrackerListChunk;
+  Decoders.Chunk(buffer, decodeDataTrackerListChunk) as DataTrackerListChunk;
