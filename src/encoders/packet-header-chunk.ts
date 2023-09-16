@@ -23,15 +23,12 @@ export default (
   if (versionHigh > 255 || versionHigh < 0) {
     throw new Error('version high must be >= 0 and <= 255');
   }
-
   if (versionLow > 255 || versionLow < 0) {
     throw new Error('version low must be >= 0 and <= 255');
   }
-
   if (frameId > 255 || frameId < 0) {
     throw new Error('frame id must be >= 0 and <= 255');
   }
-
   if (framePacketCount > 255 || framePacketCount < 0) {
     throw new Error('frame packet count must be >= 0 and <= 255');
   }
