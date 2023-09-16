@@ -1,4 +1,12 @@
 export default (id: number, chunkData: Buffer, hasSubchunks: boolean): Buffer => {
+  if (!Number.isInteger(id)) {
+    throw new Error('chunk id must be an integer');
+  }
+
+  if (id > 0xffff || id < 0) {
+    throw new Error('chunk id must be >= 0 and <= 65535');
+  }
+
   if (chunkData.length > 0x7fff) {
     throw new Error('chunkData can not be greater than 32767 bytes');
   }
