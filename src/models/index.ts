@@ -9,3 +9,4 @@ export * from './info/info-tracker-chunk';
 export * from './info/info-tracker-list-chunk';
 export * from './info/info-tracker-name-chunk';
 export * from './packet-header-chunk';
+export * from './tracker';

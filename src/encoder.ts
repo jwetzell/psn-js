@@ -1,6 +1,4 @@
-import { Tracker } from './models/tracker';
-
-import { Encoders } from '.';
+import { Encoders, Tracker } from '.';
 import { Constants } from './constants';
 
 export class Encoder {
