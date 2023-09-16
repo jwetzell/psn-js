@@ -20,7 +20,17 @@ export class Encoder {
     this.versionLow = versionLow;
   }
 
-  getInfoPackets(timestamp: bigint, trackers: Tracker[]) {
+  getInfoPackets(timestamp: bigint, trackers: Tracker[], frameId?: number) {
+    if (frameId !== undefined) {
+      if (!Number.isInteger(frameId)) {
+        throw new Error('frame id must be an integer');
+      }
+
+      if (frameId > 255 || frameId < 0) {
+        throw new Error('frame id must be >= 0 and <= 255');
+      }
+    }
+
     const systemNameChunk = infoSystemNameChunk(this.systemName);
 
     const trackerChunks = trackers.map((tracker: Tracker) => tracker.getInfoChunk());
@@ -46,20 +56,30 @@ export class Encoder {
       timestamp,
       this.versionHigh,
       this.versionLow,
-      this.infoFrameId,
+      frameId ? frameId : this.infoFrameId,
       trackerChunksLists.length
     );
     trackerChunksLists.forEach((trackerChunkList) => {
       infoPackets.push(infoPacketChunk(header, systemNameChunk, infoTrackerListChunk(trackerChunkList)));
     });
-    this.dataFrameId += 1;
-    if (this.dataFrameId > 255) {
-      this.dataFrameId = 0;
+    this.infoFrameId += 1;
+    if (this.infoFrameId > 255) {
+      this.infoFrameId = 0;
     }
     return infoPackets;
   }
 
-  getDataPackets(timestamp: bigint, trackers: Tracker[]) {
+  getDataPackets(timestamp: bigint, trackers: Tracker[], frameId?: number) {
+    if (frameId !== undefined) {
+      if (!Number.isInteger(frameId)) {
+        throw new Error('frame id must be an integer');
+      }
+
+      if (frameId > 255 || frameId < 0) {
+        throw new Error('frame id must be >= 0 and <= 255');
+      }
+    }
+
     const allTrackerChunks = trackers.map((tracker) => tracker.getDataChunk());
     const dataPackets: Buffer[] = [];
 
@@ -83,7 +103,7 @@ export class Encoder {
       timestamp,
       this.versionHigh,
       this.versionLow,
-      this.dataFrameId,
+      frameId ? frameId : this.dataFrameId,
       trackerChunksLists.length
     );
     trackerChunksLists.forEach((trackerChunks) => {
