@@ -40,7 +40,7 @@ export class Encoder {
     const trackerChunksLists: Buffer[][] = [];
     let currentTrackerList: Buffer[] = [];
 
-    let currentInfoPacketSize = Constants.MAX_UDP_PACKET_SIZE + systemNameChunk.length + Constants.CHUNK_HEADER_SIZE;
+    let currentInfoPacketSize = Constants.PACKET_HEADER_SIZE + systemNameChunk.length + Constants.CHUNK_HEADER_SIZE;
 
     trackerChunks.forEach((trackerChunk: Buffer) => {
       if (currentInfoPacketSize + trackerChunk.length > Constants.MAX_UDP_PACKET_SIZE) {
