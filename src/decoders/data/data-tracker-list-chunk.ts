@@ -14,7 +14,7 @@ function decodeDataTrackerListChunk(dataTrackerListChunk: DataTrackerListChunk) 
       if (trackerChunk.data_len) {
         offset += trackerChunk.data_len;
       }
-      if (trackerChunk.id) {
+      if (trackerChunk.id !== undefined) {
         dataTrackerListChunk.trackers[trackerChunk.id] = trackerChunk;
       }
     }
