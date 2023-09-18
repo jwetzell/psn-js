@@ -111,4 +111,19 @@ export class Decoder {
     }
     return packet;
   }
+
+  getTrackerFields(): Set<string> {
+    const keys = new Set(
+      Object.values(this.trackers)
+        .map((tracker) => Object.keys(tracker))
+        .flat(1)
+    );
+
+    keys.delete('id');
+    keys.delete('has_subchunks');
+    keys.delete('data_len');
+    keys.delete('chunk_data');
+
+    return keys;
+  }
 }
