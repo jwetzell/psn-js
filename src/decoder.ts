@@ -112,6 +112,7 @@ export class Decoder {
     return packet;
   }
 
+  // NOTE(jwetzell): gets merged set of tracker field keys minus the guaranteed properties
   getTrackerFields(): Set<string> {
     const keys = new Set(
       Object.values(this.trackers)
@@ -119,6 +120,7 @@ export class Decoder {
         .flat(1)
     );
 
+    // NOTE(jwetzell): remove fields that definitely exist
     keys.delete('id');
     keys.delete('has_subchunks');
     keys.delete('data_len');
