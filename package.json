@@ -22,7 +22,7 @@
   "repository": "https://github.com/jwetzell/psn-js",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "20.14.2",
+    "@types/node": "20.14.10",
     "prettier": "3.3.2",
     "rimraf": "5.0.8",
     "typescript": "5.4.5"
