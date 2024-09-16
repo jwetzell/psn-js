@@ -1,0 +1,23 @@
+name: Check psn-js builds
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  build-webui:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - run: npm run build
