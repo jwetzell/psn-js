@@ -9,7 +9,7 @@ function decodeDataTrackerListChunk(dataTrackerListChunk: DataTrackerListChunk) 
   let offset = 0;
   if (dataTrackerListChunk.chunk_data) {
     while (offset < dataTrackerListChunk.chunk_data.length) {
-      const trackerChunk = Decoders.DataTrackerChunk(dataTrackerListChunk.chunk_data.subarray(offset));
+      const trackerChunk = Decoders.DataTrackerChunk(dataTrackerListChunk.chunk_data.slice(offset));
       offset += Constants.CHUNK_HEADER_SIZE;
       if (trackerChunk.data_len) {
         offset += trackerChunk.data_len;
@@ -20,5 +20,5 @@ function decodeDataTrackerListChunk(dataTrackerListChunk: DataTrackerListChunk) 
     }
   }
 }
-export default (buffer: Buffer): DataTrackerListChunk =>
+export default (buffer: Uint8Array): DataTrackerListChunk =>
   Decoders.Chunk(buffer, decodeDataTrackerListChunk) as DataTrackerListChunk;

@@ -5,9 +5,14 @@ import { DataTrackerFieldChunk } from '../../models/data/data-tracker-field-chun
 
 function readXYZ(trackerFieldChunk: DataTrackerFieldChunk, prefix: string = '') {
   if (trackerFieldChunk.chunk_data) {
-    trackerFieldChunk[`${prefix}x`] = trackerFieldChunk.chunk_data.readFloatLE(0);
-    trackerFieldChunk[`${prefix}y`] = trackerFieldChunk.chunk_data.readFloatLE(4);
-    trackerFieldChunk[`${prefix}z`] = trackerFieldChunk.chunk_data.readFloatLE(8);
+    const view = new DataView(
+      trackerFieldChunk.chunk_data.buffer,
+      trackerFieldChunk.chunk_data.byteOffset,
+      trackerFieldChunk.chunk_data.byteLength
+    );
+    trackerFieldChunk[`${prefix}x`] = view.getFloat32(0, true);
+    trackerFieldChunk[`${prefix}y`] = view.getFloat32(4, true);
+    trackerFieldChunk[`${prefix}z`] = view.getFloat32(8, true);
   }
 }
 function decodeTrackerFieldChunk(trackerFieldChunk: DataTrackerFieldChunk) {
@@ -24,7 +29,12 @@ function decodeTrackerFieldChunk(trackerFieldChunk: DataTrackerFieldChunk) {
         break;
       case 0x0003:
         if (trackerFieldChunk.chunk_data) {
-          trackerFieldChunk.validity = trackerFieldChunk.chunk_data.readFloatLE();
+          const view = new DataView(
+            trackerFieldChunk.chunk_data.buffer,
+            trackerFieldChunk.chunk_data.byteOffset,
+            trackerFieldChunk.chunk_data.byteLength
+          );
+          trackerFieldChunk.validity = view.getFloat32(0, true);
         }
         break;
       case 0x0004:
@@ -35,7 +45,12 @@ function decodeTrackerFieldChunk(trackerFieldChunk: DataTrackerFieldChunk) {
         break;
       case 0x0006:
         if (trackerFieldChunk.chunk_data) {
-          trackerFieldChunk.tracker_timestamp = trackerFieldChunk.chunk_data.readBigUInt64LE();
+          const view = new DataView(
+            trackerFieldChunk.chunk_data.buffer,
+            trackerFieldChunk.chunk_data.byteOffset,
+            trackerFieldChunk.chunk_data.byteLength
+          );
+          trackerFieldChunk.tracker_timestamp = view.getBigUint64(0, true);
         }
         break;
       default:
@@ -44,5 +59,5 @@ function decodeTrackerFieldChunk(trackerFieldChunk: DataTrackerFieldChunk) {
   }
 }
 
-export default (buffer: Buffer): DataTrackerFieldChunk =>
+export default (buffer: Uint8Array): DataTrackerFieldChunk =>
   Decoders.Chunk(buffer, decodeTrackerFieldChunk) as DataTrackerFieldChunk;

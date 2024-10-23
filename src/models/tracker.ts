@@ -61,7 +61,7 @@ export class Tracker {
   }
 
   getDataChunk() {
-    const fieldChunks: Buffer[] = [];
+    const fieldChunks: Uint8Array[] = [];
 
     if (this.pos) {
       fieldChunks.push(dataTrackerPosChunk(...this.pos));
