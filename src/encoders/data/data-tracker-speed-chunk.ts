@@ -1,9 +1,11 @@
 import chunk from '../chunk';
 
-export default (x: number, y: number, z: number): Buffer => {
-  const buf = Buffer.alloc(12);
-  buf.writeFloatLE(x);
-  buf.writeFloatLE(y, 4);
-  buf.writeFloatLE(z, 8);
-  return chunk(0x0001, buf, false);
+export default (x: number, y: number, z: number): Uint8Array => {
+  const buf = new DataView(new ArrayBuffer(12));
+
+  buf.setFloat32(0, x, true);
+  buf.setFloat32(4, y, true);
+  buf.setFloat32(8, z, true);
+
+  return chunk(0x0001, new Uint8Array(buf.buffer), false);
 };

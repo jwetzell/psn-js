@@ -6,7 +6,7 @@ function decodeTrackerChunk(trackerChunk: DataTrackerChunk) {
   if (trackerChunk.chunk_data && trackerChunk.data_len) {
     let offset = 0;
     while (offset < trackerChunk.data_len) {
-      const trackerFieldChunk = Decoders.DataTrackerFieldChunk(trackerChunk.chunk_data.subarray(offset));
+      const trackerFieldChunk = Decoders.DataTrackerFieldChunk(trackerChunk.chunk_data.slice(offset));
       offset += Constants.CHUNK_HEADER_SIZE;
       if (trackerFieldChunk.data_len) {
         offset += trackerFieldChunk.data_len;
@@ -40,4 +40,4 @@ function decodeTrackerChunk(trackerChunk: DataTrackerChunk) {
   }
 }
 
-export default (buffer: Buffer): DataTrackerChunk => Decoders.Chunk(buffer, decodeTrackerChunk) as DataTrackerChunk;
+export default (buffer: Uint8Array): DataTrackerChunk => Decoders.Chunk(buffer, decodeTrackerChunk) as DataTrackerChunk;

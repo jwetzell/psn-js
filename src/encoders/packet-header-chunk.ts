@@ -6,7 +6,7 @@ export default (
   versionLow: number,
   frameId: number,
   framePacketCount: number
-): Buffer => {
+): Uint8Array => {
   if (!Number.isInteger(versionHigh)) {
     throw new Error('version high must be an integer');
   }
@@ -33,12 +33,12 @@ export default (
     throw new Error('frame packet count must be >= 0 and <= 255');
   }
 
-  const packetHeader = Buffer.alloc(12);
-  packetHeader.writeBigUInt64LE(BigInt(timestamp));
-  packetHeader.writeUint8(versionHigh, 8);
-  packetHeader.writeUint8(versionLow, 9);
-  packetHeader.writeUint8(frameId, 10);
-  packetHeader.writeUint8(framePacketCount, 11);
+  const packetHeader = new DataView(new ArrayBuffer(12));
+  packetHeader.setBigUint64(0, BigInt(timestamp), true);
+  packetHeader.setUint8(8, versionHigh);
+  packetHeader.setUint8(9, versionLow);
+  packetHeader.setUint8(10, frameId);
+  packetHeader.setUint8(11, framePacketCount);
 
-  return chunk(0x0000, packetHeader, false);
+  return chunk(0x0000, new Uint8Array(packetHeader.buffer), false);
 };

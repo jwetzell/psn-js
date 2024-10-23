@@ -1,4 +1,4 @@
-export default (id: number, chunkData: Buffer, hasSubchunks: boolean): Buffer => {
+export default (id: number, chunkData: Uint8Array, hasSubchunks: boolean): Uint8Array => {
   if (!Number.isInteger(id)) {
     throw new Error('chunk id must be an integer');
   }
@@ -11,10 +11,15 @@ export default (id: number, chunkData: Buffer, hasSubchunks: boolean): Buffer =>
     throw new Error('chunkData can not be greater than 32767 bytes');
   }
 
-  const header = Buffer.alloc(4);
-  header.writeUInt16LE(id);
+  const header = new DataView(new ArrayBuffer(4));
+  header.setUint16(0, id, true);
   const hasSubChunksBit = (hasSubchunks ? 1 : 0) << 15;
-  header.writeUInt16LE(hasSubChunksBit + chunkData.length, 2);
+  header.setUint16(2, hasSubChunksBit + chunkData.length, true);
 
-  return Buffer.concat([header, chunkData]);
+  const headerBytes = new Uint8Array(header.buffer);
+
+  const bytes = new Uint8Array(headerBytes.length + chunkData.length);
+  bytes.set(headerBytes);
+  bytes.set(chunkData, headerBytes.length);
+  return bytes;
 };

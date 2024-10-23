@@ -47,14 +47,14 @@ export class Encoder {
 
     const trackerChunks = trackers.map((tracker: Tracker) => tracker.getInfoChunk());
 
-    const infoPackets: Buffer[] = [];
+    const infoPackets: Uint8Array[] = [];
 
-    const trackerChunksLists: Buffer[][] = [];
-    let currentTrackerList: Buffer[] = [];
+    const trackerChunksLists: Uint8Array[][] = [];
+    let currentTrackerList: Uint8Array[] = [];
 
     let currentInfoPacketSize = Constants.PACKET_HEADER_SIZE + systemNameChunk.length + Constants.CHUNK_HEADER_SIZE;
 
-    trackerChunks.forEach((trackerChunk: Buffer) => {
+    trackerChunks.forEach((trackerChunk: Uint8Array) => {
       if (currentInfoPacketSize + trackerChunk.length > Constants.MAX_UDP_PACKET_SIZE) {
         trackerChunksLists.push(currentTrackerList);
         currentTrackerList = [];
@@ -95,10 +95,10 @@ export class Encoder {
     }
 
     const allTrackerChunks = trackers.map((tracker) => tracker.getDataChunk());
-    const dataPackets: Buffer[] = [];
+    const dataPackets: Uint8Array[] = [];
 
-    const trackerChunksLists: Buffer[][] = [];
-    let currentTrackerList: Buffer[] = [];
+    const trackerChunksLists: Uint8Array[][] = [];
+    let currentTrackerList: Uint8Array[] = [];
 
     let currentDataPacketSize = Constants.PACKET_HEADER_SIZE + Constants.CHUNK_HEADER_SIZE;
 

@@ -1,7 +1,7 @@
 import chunk from '../chunk';
 
-export default (timestamp: bigint): Buffer => {
-  const buf = Buffer.alloc(8);
-  buf.writeBigUInt64LE(BigInt(timestamp));
-  return chunk(0x0006, buf, false);
+export default (timestamp: bigint): Uint8Array => {
+  const buf = new DataView(new ArrayBuffer(8));
+  buf.setBigUint64(0, BigInt(timestamp), true);
+  return chunk(0x0006, new Uint8Array(buf.buffer), false);
 };

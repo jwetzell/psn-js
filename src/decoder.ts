@@ -47,7 +47,7 @@ export class Decoder {
   }
 
   // TODO(jwetzell): add invalid frame id decoding. Scenario where a frame id is reused before one is complete
-  decode(packetBuf: Buffer): DataPacketChunk | InfoPacketChunk | undefined {
+  decode(packetBuf: Uint8Array): DataPacketChunk | InfoPacketChunk | undefined {
     const packet = Decoders.Packet(packetBuf);
     if (packet === undefined) {
       return packet;
