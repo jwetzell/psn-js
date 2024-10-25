@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
+    "moduleResolution": "Node",
+    "lib": ["ESNext"],
+    "target": "ESNext",
     "esModuleInterop": true,
-    "module": "commonjs",
-    "target": "ES2020",
-    "declaration": true,
-    "rootDir": "./src",
-    "strict": true,
-    "outDir": "dist"
+    "isolatedModules": true,
+    "rootDir": "src/",
+    "strict": true
   },
-  "exclude": ["node_modules", "dist", "examples"]
+  "include": ["src/"]
 }

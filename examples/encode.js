@@ -1,4 +1,4 @@
-const { Encoder, Tracker } = require('../dist');
+const { Encoder, Tracker } = require('../dist/cjs');
 const encoder = new Encoder('Server Name', 2, 3); //server name, version high, version low
 
 const trackers = [];

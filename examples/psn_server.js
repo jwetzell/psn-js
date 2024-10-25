@@ -1,6 +1,6 @@
 // recreation of psn_server.cpp example from https://github.com/vyv/psn-cpp
 const dgram = require('dgram');
-const { Encoder, Tracker, Decoder } = require('../dist');
+const { Encoder, Tracker, Decoder } = require('../dist/cjs');
 
 const client = dgram.createSocket('udp4');
 const encoder = new Encoder('Test PSN Server', 2, 0);

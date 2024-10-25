@@ -1,4 +1,4 @@
-const { Decoder } = require('../dist');
+const { Decoder } = require('../dist/cjs');
 const decoder = new Decoder();
 
 const infoPacketBuffer = new Uint8Array([
