@@ -1,6 +1,6 @@
 {
   "name": "@jwetzell/posistagenet",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -15,9 +15,9 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "npm run build:cjs && npm run build:esm && npm run build:types",
-    "build:cjs":"tsc -p tsconfig.cjs.json",
-    "build:esm":"tsc -p tsconfig.esm.json",
-    "build:types":"tsc -p tsconfig.types.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:types": "tsc -p tsconfig.types.json",
     "example:client": "node examples/psn_client.js",
     "example:server": "node examples/psn_server.js",
     "prepublishOnly": "npm run build"
