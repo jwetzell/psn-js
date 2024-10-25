@@ -1,6 +1,6 @@
 // recreation of psn_client.cpp example from https://github.com/vyv/psn-cpp
 const dgram = require('dgram');
-const { Decoder } = require('../dist');
+const { Decoder } = require('../dist/cjs');
 
 const client = dgram.createSocket('udp4');
 const decoder = new Decoder();
