@@ -1,12 +1,7 @@
 import { Decoders } from '.';
-import { DataPacketChunk, InfoPacketChunk, InfoTrackerChunk, PacketHeaderChunk } from './models';
+import { DataPacketChunk, InfoPacketChunk, InfoTrackerChunk } from './models';
 
 export class Decoder {
-  // TODO(jwetzell): check if these last packet headers are necessary to hold on to
-  lastInfoPacketHeader?: PacketHeaderChunk;
-
-  lastDataPacketHeader?: PacketHeaderChunk;
-
   infoPacketFrames: { [key: number]: InfoPacketChunk[] } = {};
 
   dataPacketFrames: { [key: number]: DataPacketChunk[] } = {};
@@ -81,8 +76,6 @@ export class Decoder {
             delete this.infoPacketFrames[currentInfoPacketHeader.frame_id];
           }
         }
-
-        this.lastInfoPacketHeader = currentInfoPacketHeader;
       }
     } else if (packet.id === 0x6755) {
       const dataPacket = packet as DataPacketChunk;
@@ -106,7 +99,6 @@ export class Decoder {
             delete this.dataPacketFrames[currentDataPacketHeader.frame_id];
           }
         }
-        this.lastDataPacketHeader = currentDataPacketHeader;
       }
     }
     return packet;
