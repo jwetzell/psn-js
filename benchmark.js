@@ -40,7 +40,7 @@ function benchmark(trackerCount, iterations) {
   for (let index = 0; index < iterations; index += 1) {
     latestEncodedPackets = encoder.getDataPackets(Date.now(), trackers);
   }
-  benchmarkResults.data.encode = `${(performance.now() - dataEncoderStart).toFixed(2)}ms`;
+  benchmarkResults.data.encode = performance.now() - dataEncoderStart;
 
   const dataDecodedStart = performance.now();
   for (let index = 0; index < iterations; index += 1) {
@@ -48,14 +48,14 @@ function benchmark(trackerCount, iterations) {
       decoder.decode(packet);
     });
   }
-  benchmarkResults.data.decode = `${(performance.now() - dataDecodedStart).toFixed(2)}ms`;
+  benchmarkResults.data.decode = performance.now() - dataDecodedStart;
 
   // INFO
   const infoEncoderStart = performance.now();
   for (let index = 0; index < iterations; index += 1) {
     latestEncodedPackets = encoder.getInfoPackets(Date.now(), trackers);
   }
-  benchmarkResults.info.encode = `${(performance.now() - infoEncoderStart).toFixed(2)}ms`;
+  benchmarkResults.info.encode = performance.now() - infoEncoderStart;
 
   const infoDecodeStart = performance.now();
   for (let index = 0; index < iterations; index += 1) {
@@ -63,9 +63,9 @@ function benchmark(trackerCount, iterations) {
       decoder.decode(packet);
     });
   }
-  benchmarkResults.info.decode = `${(performance.now() - infoDecodeStart).toFixed(2)}ms`;
+  benchmarkResults.info.decode = performance.now() - infoDecodeStart;
 
-  console.table(benchmarkResults);
+  console.log(benchmarkResults);
 }
 
 testSizes.forEach((iterations) => {
