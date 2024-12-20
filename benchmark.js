@@ -1,4 +1,4 @@
-const { Encoder, Decoder, Tracker } = require('./dist');
+const { Encoder, Decoder, Tracker } = require('./dist/cjs');
 
 const testSizes = [1, 10, 100, 1000];
 
