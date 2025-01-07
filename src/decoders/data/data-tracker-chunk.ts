@@ -1,43 +1,46 @@
 import { Decoders } from '..';
 import { Constants } from '../../constants';
-import { DataTrackerChunk } from '../../models/data/data-tracker-chunk';
+import { DataTrackerChunk, DataTrackerChunkData } from '../../models/data/data-tracker-chunk';
 
-function decodeTrackerChunk(trackerChunk: DataTrackerChunk) {
-  if (trackerChunk.chunk_data && trackerChunk.data_len) {
+export default (buffer: Uint8Array): DataTrackerChunk => {
+  const chunk = Decoders.Chunk(buffer);
+  const data: DataTrackerChunkData = {};
+  if (chunk.chunkData && chunk.header.dataLen) {
     let offset = 0;
-    while (offset < trackerChunk.data_len) {
-      const trackerFieldChunk = Decoders.DataTrackerFieldChunk(trackerChunk.chunk_data.slice(offset));
-      offset += Constants.CHUNK_HEADER_SIZE;
-      if (trackerFieldChunk.data_len) {
-        offset += trackerFieldChunk.data_len;
-        switch (trackerFieldChunk.id) {
-          case 0x0000:
-            trackerChunk.pos = trackerFieldChunk;
-            break;
-          case 0x0001:
-            trackerChunk.speed = trackerFieldChunk;
-            break;
-          case 0x0002:
-            trackerChunk.ori = trackerFieldChunk;
-            break;
-          case 0x0003:
-            trackerChunk.status = trackerFieldChunk;
-            break;
-          case 0x0004:
-            trackerChunk.accel = trackerFieldChunk;
-            break;
-          case 0x0005:
-            trackerChunk.trgtpos = trackerFieldChunk;
-            break;
-          case 0x0006:
-            trackerChunk.timestamp = trackerFieldChunk;
-            break;
-          default:
-            break;
-        }
+    while (offset < chunk.header.dataLen) {
+      const trackerFieldChunk = Decoders.Chunk(chunk.chunkData.subarray(offset));
+      switch (trackerFieldChunk.header.id) {
+        case 0x0000:
+          data.pos = Decoders.DataTrackerXYZChunk(chunk.chunkData.subarray(offset));
+          break;
+        case 0x0001:
+          data.speed = Decoders.DataTrackerXYZChunk(chunk.chunkData.subarray(offset));
+          break;
+        case 0x0002:
+          data.ori = Decoders.DataTrackerXYZChunk(chunk.chunkData.subarray(offset));
+          break;
+        case 0x0003:
+          data.status = Decoders.DataTrackerStatusChunk(chunk.chunkData.subarray(offset));
+          break;
+        case 0x0004:
+          data.accel = Decoders.DataTrackerXYZChunk(chunk.chunkData.subarray(offset));
+          break;
+        case 0x0005:
+          data.trgtpos = Decoders.DataTrackerXYZChunk(chunk.chunkData.subarray(offset));
+          break;
+        case 0x0006:
+          data.timestamp = Decoders.DataTrackerTimestampChunk(chunk.chunkData.subarray(offset));
+          break;
+        default:
+          break;
       }
+      offset += Constants.CHUNK_HEADER_SIZE;
+      offset += trackerFieldChunk.header.dataLen;
     }
   }
-}
 
-export default (buffer: Uint8Array): DataTrackerChunk => Decoders.Chunk(buffer, decodeTrackerChunk) as DataTrackerChunk;
+  return {
+    chunk,
+    data,
+  };
+};

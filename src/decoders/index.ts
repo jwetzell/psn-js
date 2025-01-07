@@ -4,8 +4,10 @@ import PacketHeaderChunk from './packet-header-chunk';
 
 import DataPacketChunk from './data/data-packet-chunk';
 import DataTrackerChunk from './data/data-tracker-chunk';
-import DataTrackerFieldChunk from './data/data-tracker-field-chunk';
 import DataTrackerListChunk from './data/data-tracker-list-chunk';
+import DataTrackerStatusChunk from './data/data-tracker-status-chunk';
+import DataTrackerTimestampChunk from './data/data-tracker-timestamp-chunk';
+import DataTrackerXYZChunk from './data/data-tracker-xyz-chunk';
 
 import InfoPacketChunk from './info/info-packet-chunk';
 import InfoSystemNameChunk from './info/info-system-name-chunk';
@@ -19,7 +21,9 @@ export const Decoders = {
   Packet,
   DataPacketChunk,
   DataTrackerChunk,
-  DataTrackerFieldChunk,
+  DataTrackerXYZChunk,
+  DataTrackerStatusChunk,
+  DataTrackerTimestampChunk,
   DataTrackerListChunk,
   InfoPacketChunk,
   InfoSystemNameChunk,

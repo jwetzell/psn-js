@@ -1,5 +1,10 @@
 import { Chunk } from '../chunk';
 
-export interface InfoTrackerNameChunk extends Chunk {
-  tracker_name: string;
+export interface InfoTrackerNameChunkData {
+  trackerName: string;
+}
+
+export interface InfoTrackerNameChunk {
+  chunk: Chunk;
+  data: InfoTrackerNameChunkData;
 }

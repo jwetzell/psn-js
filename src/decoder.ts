@@ -1,28 +1,32 @@
 import { Decoders } from '.';
-import { DataPacketChunk, InfoPacketChunk, InfoTrackerChunk } from './models';
+import { DataPacketChunk, InfoPacketChunk, Tracker, TrackerFromData, TrackerFromInfo } from './models';
 
 export class Decoder {
   infoPacketFrames: { [key: number]: InfoPacketChunk[] } = {};
 
   dataPacketFrames: { [key: number]: DataPacketChunk[] } = {};
 
-  trackers: { [key: string]: InfoTrackerChunk } = {};
+  trackers: { [key: string]: Tracker } = {};
 
-  system_name: string = '';
+  systemName: string = '';
   constructor() {}
 
   updateInfo(framePackets: InfoPacketChunk[]) {
     framePackets.forEach((packet) => {
-      if (packet.system_name) {
-        this.system_name = packet.system_name.system_name;
+      if (packet.data.systemName?.data) {
+        this.systemName = packet.data.systemName?.data.systemName;
       }
 
-      if (packet.tracker_list?.trackers) {
-        Object.entries(packet.tracker_list.trackers).forEach(([trackerId, tracker]) => {
-          if (!this.trackers[trackerId]) {
-            this.trackers[trackerId] = {};
+      if (packet.data.trackerList?.data) {
+        packet.data.trackerList.data.trackers.forEach((infoTrackerChunk) => {
+          if (!this.trackers[infoTrackerChunk.chunk.header.id]) {
+            const tracker = TrackerFromInfo(infoTrackerChunk);
+            if (tracker) {
+              this.trackers[infoTrackerChunk.chunk.header.id] = tracker;
+            }
           }
-          this.trackers[trackerId].tracker_name = tracker.tracker_name;
+          const tracker = this.trackers[infoTrackerChunk.chunk.header.id];
+          tracker.updateInfo(infoTrackerChunk);
         });
       }
     });
@@ -30,94 +34,80 @@ export class Decoder {
 
   updateData(framePackets: DataPacketChunk[]) {
     framePackets.forEach((packet) => {
-      if (packet.tracker_list) {
-        Object.entries(packet.tracker_list.trackers).forEach(([trackerId, tracker]) => {
-          this.trackers[trackerId] = {
-            ...this.trackers[trackerId],
-            ...tracker,
-          };
+      if (packet.data.trackerList) {
+        packet.data.trackerList?.data.trackers.forEach((dataTrackerChunk) => {
+          if (!this.trackers[dataTrackerChunk.chunk.header.id]) {
+            const tracker = TrackerFromData(dataTrackerChunk);
+            if (tracker) {
+              this.trackers[dataTrackerChunk.chunk.header.id] = tracker;
+            }
+          }
+          const tracker = this.trackers[dataTrackerChunk.chunk.header.id];
+          tracker.updateData(dataTrackerChunk);
         });
       }
     });
   }
 
   // TODO(jwetzell): add invalid frame id decoding. Scenario where a frame id is reused before one is complete
-  decode(packetBuf: Uint8Array): DataPacketChunk | InfoPacketChunk | undefined {
-    const packet = Decoders.Packet(packetBuf);
+  decode(packetBuf: Uint8Array) {
+    const packet = Decoders.Chunk(packetBuf);
     if (packet === undefined) {
       return packet;
     }
 
-    if (packet.id === 0x6756) {
-      const infoPacket = packet as InfoPacketChunk;
-      if (infoPacket && infoPacket.has_subchunks) {
-        const currentInfoPacketHeader = infoPacket.packet_header;
+    if (packet.header.id === 0x6756) {
+      const infoPacket = Decoders.InfoPacketChunk(packetBuf);
+      if (infoPacket && infoPacket.chunk.header.hasSubchunks) {
+        const currentInfoPacketHeader = infoPacket.data.packetHeader;
         if (!currentInfoPacketHeader) {
           // NOTE(jwetzell): not sure that info packets without a header subchunk are valid?
           throw new Error('malformed packet');
         }
 
-        const systemSubChunk = infoPacket.system_name;
+        const systemSubChunk = infoPacket.data.systemName;
         if (!systemSubChunk) {
           // NOTE(jwetzell): not sure that info packets without a system subchunk are valid?
           throw new Error('malformed packet');
         }
-        if (currentInfoPacketHeader.frame_id) {
-          if (this.infoPacketFrames[currentInfoPacketHeader.frame_id] === undefined) {
-            this.infoPacketFrames[currentInfoPacketHeader.frame_id] = [];
+        if (currentInfoPacketHeader.data.frameId) {
+          if (this.infoPacketFrames[currentInfoPacketHeader.data.frameId] === undefined) {
+            this.infoPacketFrames[currentInfoPacketHeader.data.frameId] = [];
           }
-          this.infoPacketFrames[currentInfoPacketHeader.frame_id].push(infoPacket);
+          this.infoPacketFrames[currentInfoPacketHeader.data.frameId].push(infoPacket);
 
           if (
-            this.infoPacketFrames[currentInfoPacketHeader.frame_id].length ===
-            currentInfoPacketHeader.frame_packet_count
+            this.infoPacketFrames[currentInfoPacketHeader.data.frameId].length ===
+            currentInfoPacketHeader.data.framePacketCount
           ) {
-            this.updateInfo(this.infoPacketFrames[currentInfoPacketHeader.frame_id]);
-            delete this.infoPacketFrames[currentInfoPacketHeader.frame_id];
+            this.updateInfo(this.infoPacketFrames[currentInfoPacketHeader.data.frameId]);
+            delete this.infoPacketFrames[currentInfoPacketHeader.data.frameId];
           }
         }
       }
-    } else if (packet.id === 0x6755) {
-      const dataPacket = packet as DataPacketChunk;
-      if (dataPacket.has_subchunks) {
-        const currentDataPacketHeader = dataPacket.packet_header;
+    } else if (packet.header.id === 0x6755) {
+      const dataPacket = Decoders.DataPacketChunk(packetBuf);
+      if (dataPacket.chunk.header.hasSubchunks) {
+        const currentDataPacketHeader = dataPacket.data.packetHeader;
         if (!currentDataPacketHeader) {
           // NOTE(jwetzell): not sure that info packets without a header subchunk are valid?
           throw new Error('malformed packet');
         }
 
-        if (currentDataPacketHeader.frame_id) {
-          if (this.dataPacketFrames[currentDataPacketHeader.frame_id] === undefined) {
-            this.dataPacketFrames[currentDataPacketHeader.frame_id] = [];
+        if (currentDataPacketHeader.data.frameId) {
+          if (this.dataPacketFrames[currentDataPacketHeader.data.frameId] === undefined) {
+            this.dataPacketFrames[currentDataPacketHeader.data.frameId] = [];
           }
-          this.dataPacketFrames[currentDataPacketHeader.frame_id].push(dataPacket);
+          this.dataPacketFrames[currentDataPacketHeader.data.frameId].push(dataPacket);
           if (
-            this.dataPacketFrames[currentDataPacketHeader.frame_id].length ===
-            currentDataPacketHeader.frame_packet_count
+            this.dataPacketFrames[currentDataPacketHeader.data.frameId].length ===
+            currentDataPacketHeader.data.framePacketCount
           ) {
-            this.updateData(this.dataPacketFrames[currentDataPacketHeader.frame_id]);
-            delete this.dataPacketFrames[currentDataPacketHeader.frame_id];
+            this.updateData(this.dataPacketFrames[currentDataPacketHeader.data.frameId]);
+            delete this.dataPacketFrames[currentDataPacketHeader.data.frameId];
           }
         }
       }
     }
-    return packet;
-  }
-
-  // NOTE(jwetzell): gets merged set of tracker field keys minus the guaranteed properties
-  getTrackerFields(): Set<string> {
-    const keys = new Set(
-      Object.values(this.trackers)
-        .map((tracker) => Object.keys(tracker))
-        .flat(1)
-    );
-
-    // NOTE(jwetzell): remove fields that definitely exist
-    keys.delete('id');
-    keys.delete('has_subchunks');
-    keys.delete('data_len');
-    keys.delete('chunk_data');
-
-    return keys;
   }
 }

@@ -1,8 +1,11 @@
 import { Chunk } from '../chunk';
 import { InfoTrackerChunk } from './info-tracker-chunk';
 
-export interface InfoTrackerListChunk extends Chunk {
-  trackers: {
-    [key: number]: InfoTrackerChunk;
-  };
+export interface InfoTrackerListChunkData {
+  trackers: InfoTrackerChunk[];
+}
+
+export interface InfoTrackerListChunk {
+  chunk: Chunk;
+  data: InfoTrackerListChunkData;
 }

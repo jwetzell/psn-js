@@ -1,6 +1,10 @@
+export interface ChunkHeader {
+  id: number;
+  dataLen: number;
+  hasSubchunks: boolean;
+}
+
 export interface Chunk {
-  id?: number;
-  has_subchunks?: boolean;
-  data_len?: number;
-  chunk_data?: Uint8Array;
+  chunkData: Uint8Array;
+  header: ChunkHeader;
 }

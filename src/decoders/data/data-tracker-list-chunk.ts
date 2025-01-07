@@ -1,24 +1,33 @@
 import { Decoders } from '..';
 import { Constants } from '../../constants';
-import { DataTrackerListChunk } from '../../models/data/data-tracker-list-chunk';
+import { DataTrackerChunk } from '../../models';
+import { DataTrackerListChunk, DataTrackerListChunkData } from '../../models/data/data-tracker-list-chunk';
 
-function decodeDataTrackerListChunk(dataTrackerListChunk: DataTrackerListChunk) {
-  dataTrackerListChunk.trackers = {};
+export default (buffer: Uint8Array): DataTrackerListChunk => {
+  const chunk = Decoders.Chunk(buffer);
+  const trackers: DataTrackerChunk[] = [];
 
   // TODO(jwetzell): add error handling
-  let offset = 0;
-  if (dataTrackerListChunk.chunk_data) {
-    while (offset < dataTrackerListChunk.chunk_data.length) {
-      const trackerChunk = Decoders.DataTrackerChunk(dataTrackerListChunk.chunk_data.slice(offset));
+  if (chunk.chunkData) {
+    let offset = 0;
+    while (offset < chunk.chunkData.length) {
+      const trackerChunk = Decoders.DataTrackerChunk(chunk.chunkData.subarray(offset));
       offset += Constants.CHUNK_HEADER_SIZE;
-      if (trackerChunk.data_len) {
-        offset += trackerChunk.data_len;
+      if (trackerChunk.chunk.header.dataLen) {
+        offset += trackerChunk.chunk.header.dataLen;
       }
-      if (trackerChunk.id !== undefined) {
-        dataTrackerListChunk.trackers[trackerChunk.id] = trackerChunk;
+      if (trackerChunk.chunk.header.id !== undefined) {
+        trackers.push(trackerChunk);
       }
     }
   }
-}
-export default (buffer: Uint8Array): DataTrackerListChunk =>
-  Decoders.Chunk(buffer, decodeDataTrackerListChunk) as DataTrackerListChunk;
+
+  const data: DataTrackerListChunkData = {
+    trackers,
+  };
+
+  return {
+    chunk,
+    data,
+  };
+};

@@ -1,9 +1,14 @@
 import { Chunk } from './chunk';
 
-export interface PacketHeaderChunk extends Chunk {
-  packet_timestamp?: bigint;
-  version_high?: number;
-  version_low?: number;
-  frame_id?: number;
-  frame_packet_count?: number;
+export interface PacketHeaderChunkData {
+  packetTimestamp: bigint;
+  versionHigh: number;
+  versionLow: number;
+  frameId: number;
+  framePacketCount: number;
+}
+
+export interface PacketHeaderChunk {
+  chunk: Chunk;
+  data: PacketHeaderChunkData;
 }

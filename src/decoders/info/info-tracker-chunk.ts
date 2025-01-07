@@ -1,31 +1,36 @@
 import { Decoders } from '..';
 import { Constants } from '../../constants';
-import { InfoTrackerChunk } from '../../models/info/info-tracker-chunk';
+import { InfoTrackerChunk, InfoTrackerChunkData } from '../../models/info/info-tracker-chunk';
 
-function decodeInfoTrackerChunk(infoTrackerChunk: InfoTrackerChunk) {
-  if (infoTrackerChunk.has_subchunks && infoTrackerChunk.chunk_data && infoTrackerChunk.data_len) {
+export default (buffer: Uint8Array): InfoTrackerChunk => {
+  const chunk = Decoders.Chunk(buffer);
+
+  if (chunk.header.hasSubchunks && chunk.chunkData && chunk.header.dataLen) {
     let offset = 0;
-    while (offset < infoTrackerChunk.data_len) {
-      const view = new DataView(
-        infoTrackerChunk.chunk_data.buffer,
-        infoTrackerChunk.chunk_data.byteOffset,
-        infoTrackerChunk.chunk_data.byteLength
-      );
+    while (offset < chunk.header.dataLen) {
+      const view = new DataView(chunk.chunkData.buffer, chunk.chunkData.byteOffset, chunk.chunkData.byteLength);
       const chunkId = view.getUint16(offset, true);
       switch (chunkId) {
         case 0x0000:
-          infoTrackerChunk.tracker_name = Decoders.InfoTrackerNameChunk(infoTrackerChunk.chunk_data.slice(offset));
+          const data: InfoTrackerChunkData = {
+            trackerName: Decoders.InfoTrackerNameChunk(chunk.chunkData.subarray(offset)),
+          };
           offset += Constants.CHUNK_HEADER_SIZE;
-          if (infoTrackerChunk.tracker_name?.data_len) {
-            offset += infoTrackerChunk?.tracker_name?.data_len;
+          if (data.trackerName.chunk.header.dataLen) {
+            offset += data.trackerName.chunk.header.dataLen;
           }
-          break;
+          return {
+            chunk,
+            data,
+          };
 
         default:
           break;
       }
     }
   }
-}
 
-export default (buffer: Uint8Array): InfoTrackerChunk => Decoders.Chunk(buffer, decodeInfoTrackerChunk);
+  return {
+    chunk,
+  };
+};

@@ -1,10 +1,9 @@
 // recreation of psn_server.cpp example from https://github.com/vyv/psn-cpp
 const dgram = require('dgram');
-const { Encoder, Tracker, Decoder } = require('../dist/cjs');
+const { Encoder, Tracker } = require('../dist/cjs');
 
 const client = dgram.createSocket('udp4');
 const encoder = new Encoder('Test PSN Server', 2, 0);
-const decoder = new Decoder();
 
 const trackers = [];
 
@@ -40,25 +39,18 @@ setInterval(() => {
     trackers[index].setTimestamp(timestamp);
   });
 
+  console.log(`Sending Data Packets`);
   const dataPackets = encoder.getDataPackets(timestamp, trackers);
-  dataPackets.forEach((packet, index) => {
-    const decodedPacket = decoder.decode(packet);
-    console.log(
-      `Sending PSN_DATA_PACKET : Frame Id = ${decodedPacket.packet_header.frame_id} , Packet Count = ${index + 1}`
-    );
+  dataPackets.forEach((packet) => {
     client.send(packet, 56565, '236.10.10.10');
   });
   timestamp += 1;
 }, 5);
 
 setInterval(() => {
+  console.log(`Sending Info Packets`);
   const infoPackets = encoder.getInfoPackets(timestamp, trackers);
-  infoPackets.forEach((packet, index) => {
-    const decodedPacket = decoder.decode(packet);
-    console.log(
-      `Sending PSN_INFO_PACKET : Frame Id = ${decodedPacket.packet_header.frame_id} , Packet Count = ${index + 1}`
-    );
-
+  infoPackets.forEach((packet) => {
     client.send(packet, 56565, '236.10.10.10');
   });
 }, 500);

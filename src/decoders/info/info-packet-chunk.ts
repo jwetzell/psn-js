@@ -1,37 +1,37 @@
 import { Decoders } from '..';
 import { Constants } from '../../constants';
-import { InfoPacketChunk } from '../../models/info/info-packet-chunk';
+import { InfoPacketChunk, InfoPacketChunkData } from '../../models/info/info-packet-chunk';
 
-function decodeInfoPacketChunk(infoPacketChunk: InfoPacketChunk) {
-  if (infoPacketChunk.has_subchunks && infoPacketChunk.chunk_data && infoPacketChunk.data_len) {
+export default (buffer: Uint8Array): InfoPacketChunk => {
+  const chunk = Decoders.Chunk(buffer);
+
+  const data: InfoPacketChunkData = {};
+
+  if (chunk.header.hasSubchunks && chunk.chunkData && chunk.header.dataLen) {
     let offset = 0;
-    while (offset < infoPacketChunk.data_len) {
-      const view = new DataView(
-        infoPacketChunk.chunk_data.buffer,
-        infoPacketChunk.chunk_data.byteOffset,
-        infoPacketChunk.chunk_data.byteLength
-      );
+    while (offset < chunk.header.dataLen) {
+      const view = new DataView(chunk.chunkData.buffer, chunk.chunkData.byteOffset, chunk.chunkData.byteLength);
       const chunkId = view.getUint16(offset, true);
       switch (chunkId) {
         case 0x0000:
-          infoPacketChunk.packet_header = Decoders.PacketHeaderChunk(infoPacketChunk.chunk_data.slice(offset));
+          data.packetHeader = Decoders.PacketHeaderChunk(chunk.chunkData.subarray(offset));
           offset += Constants.CHUNK_HEADER_SIZE;
-          if (infoPacketChunk.packet_header?.data_len) {
-            offset += infoPacketChunk.packet_header.data_len;
+          if (data.packetHeader?.chunk.header.dataLen) {
+            offset += data.packetHeader.chunk.header.dataLen;
           }
           break;
         case 0x0001:
-          infoPacketChunk.system_name = Decoders.InfoSystemNameChunk(infoPacketChunk.chunk_data.slice(offset));
+          data.systemName = Decoders.InfoSystemNameChunk(chunk.chunkData.subarray(offset));
           offset += Constants.CHUNK_HEADER_SIZE;
-          if (infoPacketChunk.system_name?.data_len) {
-            offset += infoPacketChunk.system_name.data_len;
+          if (data.systemName?.chunk.header.dataLen) {
+            offset += data.systemName?.chunk.header.dataLen;
           }
           break;
         case 0x0002:
-          infoPacketChunk.tracker_list = Decoders.InfoTrackerListChunk(infoPacketChunk.chunk_data.slice(offset));
+          data.trackerList = Decoders.InfoTrackerListChunk(chunk.chunkData.subarray(offset));
           offset += Constants.CHUNK_HEADER_SIZE;
-          if (infoPacketChunk.tracker_list?.data_len) {
-            offset += infoPacketChunk.tracker_list.data_len;
+          if (data.trackerList?.chunk.header.dataLen) {
+            offset += data.trackerList.chunk.header.dataLen;
           }
           break;
         default:
@@ -39,7 +39,9 @@ function decodeInfoPacketChunk(infoPacketChunk: InfoPacketChunk) {
       }
     }
   }
-}
 
-export default (buffer: Uint8Array): InfoPacketChunk =>
-  Decoders.Chunk(buffer, decodeInfoPacketChunk) as InfoPacketChunk;
+  return {
+    chunk,
+    data,
+  };
+};

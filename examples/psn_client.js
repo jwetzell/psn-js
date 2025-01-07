@@ -23,18 +23,18 @@ setInterval(() => {
   }
 
   Object.entries(decoder.trackers).forEach(([trackerId, tracker]) => {
-    const trackerName = decoder.trackers[trackerId]?.tracker_name?.tracker_name;
+    const trackerName = decoder.trackers[trackerId]?.name;
     console.log(`Tracker - id: ${trackerId} | name: ${trackerName || ''}`);
     if (tracker.pos) {
-      console.log(`\tpos: ${tracker.pos.pos_x}, ${tracker.pos.pos_y}, ${tracker.pos.pos_z}`);
+      console.log(`\tpos: ${tracker.pos.x}, ${tracker.pos.x}, ${tracker.pos.x}`);
     }
 
     if (tracker.speed) {
-      console.log(`\tspeed: ${tracker.speed.speed_x}, ${tracker.speed.speed_y}, ${tracker.speed.speed_z}`);
+      console.log(`\tspeed: ${tracker.speed.x}, ${tracker.speed.y}, ${tracker.speed.z}`);
     }
 
     if (tracker.ori) {
-      console.log(`\tori: ${tracker.ori.ori_x}, ${tracker.ori.ori_y}, ${tracker.ori.ori_z}`);
+      console.log(`\tori: ${tracker.ori.x}, ${tracker.ori.y}, ${tracker.ori.z}`);
     }
 
     if (tracker.status) {
@@ -42,17 +42,15 @@ setInterval(() => {
     }
 
     if (tracker.accel) {
-      console.log(`\taccel: ${tracker.accel.accel_x}, ${tracker.accel.accel_y}, ${tracker.accel.accel_z}`);
+      console.log(`\taccel: ${tracker.accel.x}, ${tracker.accel.y}, ${tracker.accel.z}`);
     }
 
     if (tracker.trgtpos) {
-      console.log(
-        `\ttrgtpos: ${tracker.trgtpos.trgtpos_x}, ${tracker.trgtpos.trgtpos_y}, ${tracker.trgtpos.trgtpos_z}`
-      );
+      console.log(`\ttrgtpos: ${tracker.trgtpos.x}, ${tracker.trgtpos.y}, ${tracker.trgtpos.z}`);
     }
 
     if (tracker.timestamp) {
-      console.log(`\ttimestamp: ${tracker.timestamp.tracker_timestamp}`);
+      console.log(`\ttimestamp: ${tracker.timestamp}`);
     }
   });
 }, 1000);

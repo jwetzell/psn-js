@@ -1,30 +1,30 @@
 import { Decoders } from '..';
 import { Constants } from '../../constants';
-import { DataPacketChunk } from '../../models/data/data-packet-chunk';
+import { DataPacketChunk, DataPacketChunkData } from '../../models/data/data-packet-chunk';
 
-function decodeDataPacketChunk(dataPacketChunk: DataPacketChunk) {
-  if (dataPacketChunk.has_subchunks && dataPacketChunk.chunk_data && dataPacketChunk.data_len) {
+export default (buffer: Uint8Array): DataPacketChunk => {
+  const chunk = Decoders.Chunk(buffer);
+
+  const data: DataPacketChunkData = {};
+
+  if (chunk.header.hasSubchunks && chunk.chunkData && chunk.header.dataLen) {
     let offset = 0;
-    while (offset < dataPacketChunk.data_len) {
-      const view = new DataView(
-        dataPacketChunk.chunk_data.buffer,
-        dataPacketChunk.chunk_data.byteOffset,
-        dataPacketChunk.chunk_data.byteLength
-      );
+    while (offset < chunk.header.dataLen) {
+      const view = new DataView(chunk.chunkData.buffer, chunk.chunkData.byteOffset, chunk.chunkData.byteLength);
       const chunkId = view.getUint16(offset, true);
       switch (chunkId) {
         case 0x0000:
-          dataPacketChunk.packet_header = Decoders.PacketHeaderChunk(dataPacketChunk.chunk_data.slice(offset));
+          data.packetHeader = Decoders.PacketHeaderChunk(chunk.chunkData.subarray(offset));
           offset += Constants.CHUNK_HEADER_SIZE;
-          if (dataPacketChunk.packet_header?.data_len) {
-            offset += dataPacketChunk.packet_header.data_len;
+          if (data.packetHeader.chunk.header.dataLen) {
+            offset += data.packetHeader.chunk.header.dataLen;
           }
           break;
         case 0x0001:
-          dataPacketChunk.tracker_list = Decoders.DataTrackerListChunk(dataPacketChunk.chunk_data.slice(offset));
+          data.trackerList = Decoders.DataTrackerListChunk(chunk.chunkData.subarray(offset));
           offset += Constants.CHUNK_HEADER_SIZE;
-          if (dataPacketChunk.tracker_list.data_len) {
-            offset += dataPacketChunk.tracker_list.data_len;
+          if (data.trackerList.chunk.header.dataLen) {
+            offset += data.trackerList.chunk.header.dataLen;
           }
           break;
         default:
@@ -32,7 +32,9 @@ function decodeDataPacketChunk(dataPacketChunk: DataPacketChunk) {
       }
     }
   }
-}
 
-export default (buffer: Uint8Array): DataPacketChunk =>
-  Decoders.Chunk(buffer, decodeDataPacketChunk) as DataPacketChunk;
+  return {
+    chunk,
+    data,
+  };
+};
