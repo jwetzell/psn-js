@@ -6,7 +6,7 @@ export default (buffer: Uint8Array): Chunk => {
   const id = view.getUint16(offset, true);
   offset += 2;
 
-  // NOTE(jwetzell): this data is split up as 1 bit for has_subchunks and 15 bits for the data_len
+  // NOTE(jwetzell): this data is split up as 1 bit for hasSubchunks and 15 bits for the dataLen
   const combinedLengthAndFlag = view.getUint16(offset, true);
   const hasSubchunks = combinedLengthAndFlag > 32768;
   const dataLen = hasSubchunks ? combinedLengthAndFlag - 32768 : combinedLengthAndFlag;
