@@ -28,7 +28,7 @@ decoder.decode(infoPacketBuffer)
 decoder.decode(dataPacketBuffer)
 
 // the system_name from info packets if available
-console.log(decoder.system_name)
+console.log(decoder.systemName)
 
 // map of trackers populated with any data that has been received
 // this merges both info and data packet properties into one
