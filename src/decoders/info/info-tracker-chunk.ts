@@ -11,7 +11,7 @@ export default (buffer: Uint8Array): InfoTrackerChunk => {
       const view = new DataView(chunk.chunkData.buffer, chunk.chunkData.byteOffset, chunk.chunkData.byteLength);
       const chunkId = view.getUint16(offset, true);
       switch (chunkId) {
-        case 0x0000:
+        case 0x0000: {
           const data: InfoTrackerChunkData = {
             trackerName: Decoders.InfoTrackerNameChunk(chunk.chunkData.subarray(offset)),
           };
@@ -23,7 +23,7 @@ export default (buffer: Uint8Array): InfoTrackerChunk => {
             chunk,
             data,
           };
-
+        }
         default:
           break;
       }

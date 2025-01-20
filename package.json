@@ -21,7 +21,7 @@
     "example:client": "node examples/psn_client.js",
     "example:server": "node examples/psn_server.js",
     "prepublishOnly": "npm run build",
-    "lint:check": "eslint ./",
+    "lint:check": "eslint ./src",
     "format:check": "prettier ./ --check",
     "format:write": "prettier ./ --write"
   },
@@ -36,9 +36,15 @@
   "repository": "https://github.com/jwetzell/psn-js",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.18.0",
     "@types/node": "22.10.2",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "globals": "^15.14.0",
     "prettier": "3.4.2",
     "rimraf": "6.0.1",
-    "typescript": "5.7.2"
+    "typescript": "5.7.2",
+    "typescript-eslint": "^8.20.0"
   }
 }
