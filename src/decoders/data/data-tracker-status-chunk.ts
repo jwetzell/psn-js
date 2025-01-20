@@ -1,5 +1,3 @@
-/* eslint-disable no-case-declarations */
-
 import { Decoders } from '..';
 import { DataTrackerStatusChunk, DataTrackerStatusChunkData } from '../../models/data/data-tracker-status-chunk';
 
