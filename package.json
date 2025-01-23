@@ -23,7 +23,9 @@
     "prepublishOnly": "npm run build",
     "lint:check": "eslint ./src",
     "format:check": "prettier ./ --check",
-    "format:write": "prettier ./ --write"
+    "format:write": "prettier ./ --write",
+    "pretest": "npm run build",
+    "test": "node --test --experimental-test-coverage"
   },
   "files": [
     "dist"
