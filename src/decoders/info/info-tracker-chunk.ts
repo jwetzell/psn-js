@@ -8,8 +8,7 @@ export default (buffer: Uint8Array): InfoTrackerChunk => {
   if (chunk.header.hasSubchunks && chunk.chunkData && chunk.header.dataLen) {
     let offset = 0;
     while (offset < chunk.header.dataLen) {
-      const view = new DataView(chunk.chunkData.buffer, chunk.chunkData.byteOffset, chunk.chunkData.byteLength);
-      const chunkId = view.getUint16(offset, true);
+      const chunkId = (chunk.chunkData.subarray(offset)[1] << 8) + chunk.chunkData.subarray(offset)[0];
       switch (chunkId) {
         case 0x0000: {
           const data: InfoTrackerChunkData = {
