@@ -1,11 +1,10 @@
 import chunk from '../chunk';
 
+const floatArray = new Float32Array(3);
 export default (x: number, y: number, z: number): Uint8Array => {
-  const buf = new DataView(new ArrayBuffer(12));
+  floatArray[0] = x;
+  floatArray[1] = y;
+  floatArray[2] = z;
 
-  buf.setFloat32(0, x, true);
-  buf.setFloat32(4, y, true);
-  buf.setFloat32(8, z, true);
-
-  return chunk(0x0001, new Uint8Array(buf.buffer), false);
+  return chunk(0x0001, new Uint8Array(floatArray.buffer), false);
 };
