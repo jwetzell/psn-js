@@ -1,5 +1,6 @@
 import chunk from './chunk';
 
+const packetHeader = new DataView(new ArrayBuffer(12));
 export default (
   timestamp: bigint,
   versionHigh: number,
@@ -33,7 +34,6 @@ export default (
     throw new Error('frame packet count must be >= 0 and <= 255');
   }
 
-  const packetHeader = new DataView(new ArrayBuffer(12));
   packetHeader.setBigUint64(0, BigInt(timestamp), true);
   packetHeader.setUint8(8, versionHigh);
   packetHeader.setUint8(9, versionLow);
