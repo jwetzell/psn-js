@@ -1,3 +1,4 @@
+const header = new DataView(new ArrayBuffer(4));
 export default (id: number, chunkData: Uint8Array, hasSubchunks: boolean): Uint8Array => {
   if (!Number.isInteger(id)) {
     throw new Error('chunk id must be an integer');
@@ -11,7 +12,6 @@ export default (id: number, chunkData: Uint8Array, hasSubchunks: boolean): Uint8
     throw new Error('chunkData can not be greater than 32767 bytes');
   }
 
-  const header = new DataView(new ArrayBuffer(4));
   header.setUint16(0, id, true);
   const hasSubChunksBit = (hasSubchunks ? 1 : 0) << 15;
   header.setUint16(2, hasSubChunksBit + chunkData.length, true);
