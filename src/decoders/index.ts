@@ -1,5 +1,4 @@
 import Chunk from './chunk';
-import Packet from './packet';
 import PacketHeaderChunk from './packet-header-chunk';
 
 import DataPacketChunk from './data/data-packet-chunk';
@@ -18,7 +17,6 @@ import InfoTrackerNameChunk from './info/info-tracker-name-chunk';
 export const Decoders = {
   Chunk,
   PacketHeaderChunk,
-  Packet,
   DataPacketChunk,
   DataTrackerChunk,
   DataTrackerXYZChunk,
