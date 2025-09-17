@@ -15,8 +15,8 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "npm run build:cjs && npm run build:esm && npm run build:types",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
+    "build:esm": "tsc -p tsconfig.esm.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
     "build:types": "tsc -p tsconfig.types.json",
     "example:client": "node examples/psn_client.js",
     "example:server": "node examples/psn_server.js",
