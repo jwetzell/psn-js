@@ -1,4 +1,4 @@
-import chunk from '../chunk';
+import chunk from '../chunk.js';
 
 const floatArray = new Float32Array(3);
 export default (x: number, y: number, z: number): Uint8Array => {

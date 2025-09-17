@@ -1,5 +1,5 @@
-import { Decoders } from '..';
-import { DataTrackerStatusChunk, DataTrackerStatusChunkData } from '../../models/data/data-tracker-status-chunk';
+import { DataTrackerStatusChunk, DataTrackerStatusChunkData } from '../../models/data/data-tracker-status-chunk.js';
+import { Decoders } from '../index.js';
 
 export default (buffer: Uint8Array): DataTrackerStatusChunk => {
   const chunk = Decoders.Chunk(buffer);

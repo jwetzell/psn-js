@@ -1,7 +1,7 @@
-import { Decoders } from '..';
-import { Constants } from '../../constants';
-import { InfoTrackerChunk } from '../../models/info/info-tracker-chunk';
-import { InfoTrackerListChunk, InfoTrackerListChunkData } from '../../models/info/info-tracker-list-chunk';
+import { Constants } from '../../constants.js';
+import { InfoTrackerChunk } from '../../models/info/info-tracker-chunk.js';
+import { InfoTrackerListChunk, InfoTrackerListChunkData } from '../../models/info/info-tracker-list-chunk.js';
+import { Decoders } from '../index.js';
 
 export default (buffer: Uint8Array): InfoTrackerListChunk => {
   const chunk = Decoders.Chunk(buffer);

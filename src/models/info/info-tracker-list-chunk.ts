@@ -1,5 +1,5 @@
-import { Chunk } from '../chunk';
-import { InfoTrackerChunk } from './info-tracker-chunk';
+import { Chunk } from '../chunk.js';
+import { InfoTrackerChunk } from './info-tracker-chunk.js';
 
 export interface InfoTrackerListChunkData {
   trackers: InfoTrackerChunk[];

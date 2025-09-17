@@ -1,6 +1,6 @@
-import { Decoders } from '..';
-import { Constants } from '../../constants';
-import { DataPacketChunk, DataPacketChunkData } from '../../models/data/data-packet-chunk';
+import { Constants } from '../../constants.js';
+import { DataPacketChunk, DataPacketChunkData } from '../../models/data/data-packet-chunk.js';
+import { Decoders } from '../index.js';
 
 export default (buffer: Uint8Array): DataPacketChunk => {
   const chunk = Decoders.Chunk(buffer);

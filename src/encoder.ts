@@ -1,5 +1,5 @@
-import { Encoders, Tracker } from '.';
-import { Constants } from './constants';
+import { Constants } from './constants.js';
+import { Encoders, Tracker } from './index.js';
 
 export class Encoder {
   private systemName: string;

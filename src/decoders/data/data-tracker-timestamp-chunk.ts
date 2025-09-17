@@ -1,8 +1,8 @@
-import { Decoders } from '..';
 import {
   DataTrackerTimestampChunk,
   DataTrackerTimestampChunkData,
-} from '../../models/data/data-tracker-timestamp-chunk';
+} from '../../models/data/data-tracker-timestamp-chunk.js';
+import { Decoders } from '../index.js';
 
 export default (buffer: Uint8Array): DataTrackerTimestampChunk => {
   const chunk = Decoders.Chunk(buffer);

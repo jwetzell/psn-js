@@ -1,5 +1,5 @@
-export { Decoder } from './decoder';
-export * from './decoders';
-export { Encoder } from './encoder';
-export * from './encoders';
-export * from './models';
+export { Decoder } from './decoder.js';
+export * from './decoders/index.js';
+export { Encoder } from './encoder.js';
+export * from './encoders/index.js';
+export * from './models/index.js';

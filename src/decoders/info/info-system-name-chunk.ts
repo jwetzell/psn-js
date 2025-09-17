@@ -1,5 +1,5 @@
-import { Decoders } from '..';
-import { InfoSystemNameChunk, InfoSystemNameChunkData } from '../../models/info/info-system-name-chunk';
+import { InfoSystemNameChunk, InfoSystemNameChunkData } from '../../models/info/info-system-name-chunk.js';
+import { Decoders } from '../index.js';
 
 const nameDecoder = new TextDecoder();
 export default (buffer: Uint8Array): InfoSystemNameChunk => {

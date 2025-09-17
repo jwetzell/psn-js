@@ -1,4 +1,4 @@
-import chunk from './chunk';
+import chunk from './chunk.js';
 
 const packetHeader = new DataView(new ArrayBuffer(12));
 export default (

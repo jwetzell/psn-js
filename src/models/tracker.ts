@@ -1,15 +1,15 @@
-import dataTrackerAccelChunk from '../encoders/data/data-tracker-accel-chunk';
-import dataTrackerChunk from '../encoders/data/data-tracker-chunk';
-import dataTrackerOriChunk from '../encoders/data/data-tracker-ori-chunk';
-import dataTrackerPosChunk from '../encoders/data/data-tracker-pos-chunk';
-import dataTrackerSpeedChunk from '../encoders/data/data-tracker-speed-chunk';
-import dataTrackerStatusChunk from '../encoders/data/data-tracker-status-chunk';
-import dataTrackerTimestampChunk from '../encoders/data/data-tracker-timestamp-chunk';
-import dataTrackerTrgtposChunk from '../encoders/data/data-tracker-trgtpos-chunk';
-import infoTrackerChunk from '../encoders/info/info-tracker-chunk';
-import infoTrackerNameChunk from '../encoders/info/info-tracker-name-chunk';
-import { DataTrackerChunk } from './data/data-tracker-chunk';
-import { InfoTrackerChunk } from './info/info-tracker-chunk';
+import dataTrackerAccelChunk from '../encoders/data/data-tracker-accel-chunk.js';
+import dataTrackerChunk from '../encoders/data/data-tracker-chunk.js';
+import dataTrackerOriChunk from '../encoders/data/data-tracker-ori-chunk.js';
+import dataTrackerPosChunk from '../encoders/data/data-tracker-pos-chunk.js';
+import dataTrackerSpeedChunk from '../encoders/data/data-tracker-speed-chunk.js';
+import dataTrackerStatusChunk from '../encoders/data/data-tracker-status-chunk.js';
+import dataTrackerTimestampChunk from '../encoders/data/data-tracker-timestamp-chunk.js';
+import dataTrackerTrgtposChunk from '../encoders/data/data-tracker-trgtpos-chunk.js';
+import infoTrackerChunk from '../encoders/info/info-tracker-chunk.js';
+import infoTrackerNameChunk from '../encoders/info/info-tracker-name-chunk.js';
+import { DataTrackerChunk } from './data/data-tracker-chunk.js';
+import { InfoTrackerChunk } from './info/info-tracker-chunk.js';
 
 export type XYZData = {
   x: number;

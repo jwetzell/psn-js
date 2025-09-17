@@ -1,4 +1,4 @@
-import chunk from '../chunk';
+import chunk from '../chunk.js';
 
 const buf = new DataView(new ArrayBuffer(8));
 export default (timestamp: bigint): Uint8Array => {

@@ -1,6 +1,6 @@
-import { Chunk } from '../chunk';
-import { PacketHeaderChunk } from '../packet-header-chunk';
-import { DataTrackerListChunk } from './data-tracker-list-chunk';
+import { Chunk } from '../chunk.js';
+import { PacketHeaderChunk } from '../packet-header-chunk.js';
+import { DataTrackerListChunk } from './data-tracker-list-chunk.js';
 
 export interface DataPacketChunkData {
   packetHeader?: PacketHeaderChunk;

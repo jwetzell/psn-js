@@ -1,4 +1,4 @@
-import chunk from '../chunk';
+import chunk from '../chunk.js';
 
 export default (trackerChunks: Uint8Array[]): Uint8Array => {
   let trackerChunksTotalLength = 0;

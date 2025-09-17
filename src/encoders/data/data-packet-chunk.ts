@@ -1,4 +1,4 @@
-import chunk from '../chunk';
+import chunk from '../chunk.js';
 export default (packetHeaderChunk: Uint8Array, trackerListChunk: Uint8Array): Uint8Array => {
   const chunkData = new Uint8Array(packetHeaderChunk.length + trackerListChunk.length);
   chunkData.set(packetHeaderChunk);

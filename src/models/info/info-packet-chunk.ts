@@ -1,7 +1,7 @@
-import { Chunk } from '../chunk';
-import { PacketHeaderChunk } from '../packet-header-chunk';
-import { InfoSystemNameChunk } from './info-system-name-chunk';
-import { InfoTrackerListChunk } from './info-tracker-list-chunk';
+import { Chunk } from '../chunk.js';
+import { PacketHeaderChunk } from '../packet-header-chunk.js';
+import { InfoSystemNameChunk } from './info-system-name-chunk.js';
+import { InfoTrackerListChunk } from './info-tracker-list-chunk.js';
 
 export interface InfoPacketChunkData {
   packetHeader?: PacketHeaderChunk;

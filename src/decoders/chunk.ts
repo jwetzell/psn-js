@@ -1,4 +1,4 @@
-import { Chunk } from '../models/chunk';
+import { Chunk } from '../models/chunk.js';
 
 export default (buffer: Uint8Array): Chunk => {
   if (buffer.length < 4) {

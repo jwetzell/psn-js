@@ -1,5 +1,5 @@
-import { Decoders } from '.';
-import { DataPacketChunk, InfoPacketChunk, Tracker, TrackerFromData, TrackerFromInfo } from './models';
+import { Decoders } from './index.js';
+import { DataPacketChunk, InfoPacketChunk, Tracker, TrackerFromData, TrackerFromInfo } from './models/index.js';
 
 export class Decoder {
   infoPacketFrames: { [key: number]: InfoPacketChunk[] } = {};

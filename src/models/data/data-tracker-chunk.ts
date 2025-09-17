@@ -1,7 +1,7 @@
-import { Chunk } from '../chunk';
-import { DataTrackerStatusChunk } from './data-tracker-status-chunk';
-import { DataTrackerTimestampChunk } from './data-tracker-timestamp-chunk';
-import { DataTrackerXYZChunk } from './data-tracker-xyz-chunk';
+import { Chunk } from '../chunk.js';
+import { DataTrackerStatusChunk } from './data-tracker-status-chunk.js';
+import { DataTrackerTimestampChunk } from './data-tracker-timestamp-chunk.js';
+import { DataTrackerXYZChunk } from './data-tracker-xyz-chunk.js';
 
 export interface DataTrackerChunkData {
   pos?: DataTrackerXYZChunk;

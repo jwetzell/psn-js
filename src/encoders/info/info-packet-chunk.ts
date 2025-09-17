@@ -1,4 +1,4 @@
-import chunk from '../chunk';
+import chunk from '../chunk.js';
 
 export default (
   packetHeaderChunk: Uint8Array,
