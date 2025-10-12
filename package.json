@@ -38,7 +38,7 @@
   "repository": "https://github.com/jwetzell/psn-js",
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "9.34.0",
+    "@eslint/js": "9.37.0",
     "@types/node": "24.7.2",
     "eslint": "9.18.0",
     "eslint-config-prettier": "10.1.8",
