@@ -43,7 +43,7 @@
     "eslint": "9.18.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
-    "globals": "16.5.0",
+    "globals": "17.3.0",
     "prettier": "3.7.4",
     "rimraf": "6.1.2",
     "typescript": "5.9.3",
