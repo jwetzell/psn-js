@@ -1,5 +1,5 @@
 import { Constants } from '../../constants.js';
-import { InfoPacketChunk, InfoPacketChunkData } from '../../models/info/info-packet-chunk.js';
+import type { InfoPacketChunk, InfoPacketChunkData } from '../../models/info/info-packet-chunk.js';
 import { Decoders } from '../index.js';
 
 export default (buffer: Uint8Array): InfoPacketChunk => {

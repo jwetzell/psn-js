@@ -1,6 +1,6 @@
 import { Constants } from '../../constants.js';
-import { DataTrackerListChunk, DataTrackerListChunkData } from '../../models/data/data-tracker-list-chunk.js';
-import { DataTrackerChunk } from '../../models/index.js';
+import type { DataTrackerListChunk, DataTrackerListChunkData } from '../../models/data/data-tracker-list-chunk.js';
+import type { DataTrackerChunk } from '../../models/index.js';
 import { Decoders } from '../index.js';
 
 export default (buffer: Uint8Array): DataTrackerListChunk => {

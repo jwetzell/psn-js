@@ -1,5 +1,5 @@
-import { Chunk } from '../chunk.js';
-import { InfoTrackerNameChunk } from './info-tracker-name-chunk.js';
+import type { Chunk } from '../chunk.js';
+import type { InfoTrackerNameChunk } from './info-tracker-name-chunk.js';
 
 export interface InfoTrackerChunkData {
   trackerName: InfoTrackerNameChunk;

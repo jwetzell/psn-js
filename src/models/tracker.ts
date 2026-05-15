@@ -8,8 +8,8 @@ import dataTrackerTimestampChunk from '../encoders/data/data-tracker-timestamp-c
 import dataTrackerTrgtposChunk from '../encoders/data/data-tracker-trgtpos-chunk.js';
 import infoTrackerChunk from '../encoders/info/info-tracker-chunk.js';
 import infoTrackerNameChunk from '../encoders/info/info-tracker-name-chunk.js';
-import { DataTrackerChunk } from './data/data-tracker-chunk.js';
-import { InfoTrackerChunk } from './info/info-tracker-chunk.js';
+import type { DataTrackerChunk } from './data/data-tracker-chunk.js';
+import type { InfoTrackerChunk } from './info/info-tracker-chunk.js';
 
 export type XYZData = {
   x: number;

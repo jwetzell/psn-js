@@ -1,4 +1,4 @@
-import { Chunk } from './chunk.js';
+import type { Chunk } from './chunk.js';
 
 export interface PacketHeaderChunkData {
   packetTimestamp: bigint;

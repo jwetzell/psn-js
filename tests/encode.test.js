@@ -1,6 +1,6 @@
 const { deepEqual, throws, equal } = require('assert');
 const { describe, it } = require('node:test');
-const { Encoders } = require('../dist/cjs/encoders');
+const { Encoders } = require('../');
 
 const goodTests = [
   {

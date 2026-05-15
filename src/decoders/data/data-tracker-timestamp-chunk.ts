@@ -1,4 +1,4 @@
-import {
+import type {
   DataTrackerTimestampChunk,
   DataTrackerTimestampChunkData,
 } from '../../models/data/data-tracker-timestamp-chunk.js';

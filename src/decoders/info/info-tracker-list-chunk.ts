@@ -1,6 +1,6 @@
 import { Constants } from '../../constants.js';
-import { InfoTrackerChunk } from '../../models/info/info-tracker-chunk.js';
-import { InfoTrackerListChunk, InfoTrackerListChunkData } from '../../models/info/info-tracker-list-chunk.js';
+import type { InfoTrackerChunk } from '../../models/info/info-tracker-chunk.js';
+import type { InfoTrackerListChunk, InfoTrackerListChunkData } from '../../models/info/info-tracker-list-chunk.js';
 import { Decoders } from '../index.js';
 
 export default (buffer: Uint8Array): InfoTrackerListChunk => {

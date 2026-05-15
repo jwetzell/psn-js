@@ -1,4 +1,4 @@
-import { InfoTrackerNameChunk, InfoTrackerNameChunkData } from '../../models/info/info-tracker-name-chunk.js';
+import type { InfoTrackerNameChunk, InfoTrackerNameChunkData } from '../../models/info/info-tracker-name-chunk.js';
 import { Decoders } from '../index.js';
 
 const nameDecoder = new TextDecoder();

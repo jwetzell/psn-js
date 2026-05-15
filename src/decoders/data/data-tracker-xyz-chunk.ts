@@ -1,4 +1,4 @@
-import { DataTrackerXYZChunk, DataTrackerXYZChunkData } from '../../models/data/data-tracker-xyz-chunk.js';
+import type { DataTrackerXYZChunk, DataTrackerXYZChunkData } from '../../models/data/data-tracker-xyz-chunk.js';
 import { Decoders } from '../index.js';
 
 export default (buffer: Uint8Array): DataTrackerXYZChunk => {

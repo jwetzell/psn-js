@@ -1,4 +1,4 @@
-import { PacketHeaderChunk, PacketHeaderChunkData } from '../models/packet-header-chunk.js';
+import type { PacketHeaderChunk, PacketHeaderChunkData } from '../models/packet-header-chunk.js';
 import { Decoders } from './index.js';
 
 export default (buffer: Uint8Array): PacketHeaderChunk => {
