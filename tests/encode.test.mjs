@@ -1,6 +1,6 @@
-const { deepEqual, throws, equal } = require('assert');
-const { describe, it } = require('node:test');
-const { Encoders } = require('../');
+import { Encoders } from '@jwetzell/posistagenet';
+import { deepEqual, throws } from 'assert';
+import { describe, it } from 'node:test';
 
 const goodTests = [
   {
