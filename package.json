@@ -18,9 +18,10 @@
     "example:client": "node examples/psn_client.js",
     "example:server": "node examples/psn_server.js",
     "prepublishOnly": "npm run build",
-    "lint:check": "eslint ./src",
-    "format:check": "prettier ./ --check",
-    "format:write": "prettier ./ --write",
+    "lint:check": "biome lint",
+    "lint:write": "biome lint --write",
+    "format:check": "biome format",
+    "format:write": "biome format --write",
     "pretest": "npm run build",
     "test": "node --test --experimental-test-coverage"
   },
@@ -35,16 +36,12 @@
   "repository": "https://github.com/jwetzell/psn-js",
   "license": "MIT",
   "devDependencies": {
+    "@biomejs/biome": "2.5.3",
     "@eslint/js": "10.0.1",
     "@types/node": "24.7.2",
-    "eslint": "10.7.0",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.6",
     "globals": "17.7.0",
-    "prettier": "3.9.5",
     "rimraf": "6.1.3",
     "tsdown": "0.22.7",
-    "typescript": "6.0.3",
-    "typescript-eslint": "8.64.0"
+    "typescript": "6.0.3"
   }
 }
