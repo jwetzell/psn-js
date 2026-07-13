@@ -1,6 +1,6 @@
-import { Encoders } from '@jwetzell/posistagenet';
-import { deepEqual, throws } from 'assert';
+import { deepEqual, throws } from 'node:assert';
 import { describe, it } from 'node:test';
+import { Encoders } from '@jwetzell/posistagenet';
 
 const goodTests = [
 	{

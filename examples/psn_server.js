@@ -1,6 +1,6 @@
 // recreation of psn_server.cpp example from https://github.com/vyv/psn-cpp
-const dgram = require('dgram');
-const { Encoder, Tracker } = require('../dist/cjs');
+const dgram = require('node:dgram');
+const { Encoder, Tracker } = require('@jwetzell/posistagenet');
 
 const client = dgram.createSocket('udp4');
 const encoder = new Encoder('Test PSN Server', 2, 0);
@@ -25,7 +25,7 @@ const distFromSun = [
 
 let timestamp = 0;
 setInterval(() => {
-	orbits.forEach((orbit, index) => {
+	orbits.forEach((_, index) => {
 		const a = 1.0 / orbits[index];
 		const b = distFromSun[index];
 		const x = timestamp;

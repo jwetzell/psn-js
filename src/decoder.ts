@@ -2,7 +2,7 @@ import { Decoders } from './index.js';
 import {
 	type DataPacketChunk,
 	type InfoPacketChunk,
-	Tracker,
+	type Tracker,
 	TrackerFromData,
 	TrackerFromInfo,
 } from './models/index.js';
@@ -15,7 +15,6 @@ export class Decoder {
 	trackers: { [key: string]: Tracker } = {};
 
 	systemName: string = '';
-	constructor() {}
 
 	updateInfo(framePackets: InfoPacketChunk[]) {
 		framePackets.forEach((packet) => {
@@ -64,7 +63,7 @@ export class Decoder {
 
 		if (packet.header.id === 0x6756) {
 			const infoPacket = Decoders.InfoPacketChunk(packetBuf);
-			if (infoPacket && infoPacket.chunk.header.hasSubchunks) {
+			if (infoPacket?.chunk.header.hasSubchunks) {
 				const currentInfoPacketHeader = infoPacket.data.packetHeader;
 				if (!currentInfoPacketHeader) {
 					// NOTE(jwetzell): not sure that info packets without a header subchunk are valid?
