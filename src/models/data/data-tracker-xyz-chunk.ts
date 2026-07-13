@@ -1,12 +1,12 @@
 import type { Chunk } from '../chunk.js';
 
 export interface DataTrackerXYZChunkData {
-  x: number;
-  y: number;
-  z: number;
+	x: number;
+	y: number;
+	z: number;
 }
 
 export interface DataTrackerXYZChunk {
-  chunk: Chunk;
-  data: DataTrackerXYZChunkData;
+	chunk: Chunk;
+	data: DataTrackerXYZChunkData;
 }

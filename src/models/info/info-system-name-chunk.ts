@@ -1,10 +1,10 @@
 import type { Chunk } from '../chunk.js';
 
 export interface InfoSystemNameChunkData {
-  systemName: string;
+	systemName: string;
 }
 
 export interface InfoSystemNameChunk {
-  chunk: Chunk;
-  data: InfoSystemNameChunkData;
+	chunk: Chunk;
+	data: InfoSystemNameChunkData;
 }

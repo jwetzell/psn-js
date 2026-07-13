@@ -1,10 +1,10 @@
 import type { Chunk } from '../chunk.js';
 
 export interface DataTrackerTimestampChunkData {
-  timestamp: bigint;
+	timestamp: bigint;
 }
 
 export interface DataTrackerTimestampChunk {
-  chunk: Chunk;
-  data: DataTrackerTimestampChunkData;
+	chunk: Chunk;
+	data: DataTrackerTimestampChunkData;
 }

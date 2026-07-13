@@ -19,38 +19,40 @@ trackers.push(new Tracker(8, 'Neptune'));
 trackers.push(new Tracker(9, 'Pluto'));
 
 const orbits = [1.0, 88.0, 224.7, 365.2, 687, 4332, 10760, 30700, 60200, 90600];
-const distFromSun = [0, 0.58, 1.08, 1.5, 2.28, 7.78, 14.29, 28.71, 45.04, 59.13];
+const distFromSun = [
+	0, 0.58, 1.08, 1.5, 2.28, 7.78, 14.29, 28.71, 45.04, 59.13,
+];
 
 let timestamp = 0;
 setInterval(() => {
-  orbits.forEach((orbit, index) => {
-    const a = 1.0 / orbits[index];
-    const b = distFromSun[index];
-    const x = timestamp;
-    const cb = Math.cos(a * x) * b;
-    const sb = Math.sin(a * x) * b;
+	orbits.forEach((orbit, index) => {
+		const a = 1.0 / orbits[index];
+		const b = distFromSun[index];
+		const x = timestamp;
+		const cb = Math.cos(a * x) * b;
+		const sb = Math.sin(a * x) * b;
 
-    trackers[index].setPos(sb, 0, cb);
-    trackers[index].setSpeed(a * cb, 0, -a * sb);
-    trackers[index].setOri(0, x / 1000.0, 0);
-    trackers[index].setAccel(-a * a * sb, 0, -a * a * cb);
-    trackers[index].setTrgtPos(3, 14, 16);
-    trackers[index].setStatus(index / 10.0);
-    trackers[index].setTimestamp(timestamp);
-  });
+		trackers[index].setPos(sb, 0, cb);
+		trackers[index].setSpeed(a * cb, 0, -a * sb);
+		trackers[index].setOri(0, x / 1000.0, 0);
+		trackers[index].setAccel(-a * a * sb, 0, -a * a * cb);
+		trackers[index].setTrgtPos(3, 14, 16);
+		trackers[index].setStatus(index / 10.0);
+		trackers[index].setTimestamp(timestamp);
+	});
 
-  console.log(`Sending Data Packets`);
-  const dataPackets = encoder.getDataPackets(timestamp, trackers);
-  dataPackets.forEach((packet) => {
-    client.send(packet, 56565, '236.10.10.10');
-  });
-  timestamp += 1;
+	console.log(`Sending Data Packets`);
+	const dataPackets = encoder.getDataPackets(timestamp, trackers);
+	dataPackets.forEach((packet) => {
+		client.send(packet, 56565, '236.10.10.10');
+	});
+	timestamp += 1;
 }, 5);
 
 setInterval(() => {
-  console.log(`Sending Info Packets`);
-  const infoPackets = encoder.getInfoPackets(timestamp, trackers);
-  infoPackets.forEach((packet) => {
-    client.send(packet, 56565, '236.10.10.10');
-  });
+	console.log(`Sending Info Packets`);
+	const infoPackets = encoder.getInfoPackets(timestamp, trackers);
+	infoPackets.forEach((packet) => {
+		client.send(packet, 56565, '236.10.10.10');
+	});
 }, 500);

@@ -1,10 +1,10 @@
 import type { Chunk } from '../chunk.js';
 
 export interface DataTrackerStatusChunkData {
-  validity: number;
+	validity: number;
 }
 
 export interface DataTrackerStatusChunk {
-  chunk: Chunk;
-  data: DataTrackerStatusChunkData;
+	chunk: Chunk;
+	data: DataTrackerStatusChunkData;
 }

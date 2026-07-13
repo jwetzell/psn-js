@@ -16,11 +16,11 @@ const dataPackets = encoder.getDataPackets(timestamp, trackers);
 const infoPackets = encoder.getInfoPackets(timestamp, trackers);
 
 dataPackets.forEach((dataPacket) => {
-  console.log('send packet somehow');
-  console.log(dataPacket);
+	console.log('send packet somehow');
+	console.log(dataPacket);
 });
 
 infoPackets.forEach((infoPacket) => {
-  console.log('send packet somehow');
-  console.log(infoPacket);
+	console.log('send packet somehow');
+	console.log(infoPacket);
 });

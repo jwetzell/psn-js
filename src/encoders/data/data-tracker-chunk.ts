@@ -1,20 +1,20 @@
 import chunk from '../chunk.js';
 
 export default (trackerId: number, fieldChunks: Uint8Array[]): Uint8Array => {
-  let fieldChunksTotalLength = 0;
+	let fieldChunksTotalLength = 0;
 
-  fieldChunks.forEach((fieldChunk) => {
-    fieldChunksTotalLength += fieldChunk.length;
-  });
+	fieldChunks.forEach((fieldChunk) => {
+		fieldChunksTotalLength += fieldChunk.length;
+	});
 
-  const fieldChunksBytes = new Uint8Array(fieldChunksTotalLength);
+	const fieldChunksBytes = new Uint8Array(fieldChunksTotalLength);
 
-  let offset = 0;
+	let offset = 0;
 
-  fieldChunks.forEach((fieldChunk) => {
-    fieldChunksBytes.set(fieldChunk, offset);
-    offset += fieldChunk.length;
-  });
+	fieldChunks.forEach((fieldChunk) => {
+		fieldChunksBytes.set(fieldChunk, offset);
+		offset += fieldChunk.length;
+	});
 
-  return chunk(trackerId, fieldChunksBytes, fieldChunks.length > 0);
+	return chunk(trackerId, fieldChunksBytes, fieldChunks.length > 0);
 };

@@ -4,16 +4,16 @@ import type { DataTrackerTimestampChunk } from './data-tracker-timestamp-chunk.j
 import type { DataTrackerXYZChunk } from './data-tracker-xyz-chunk.js';
 
 export interface DataTrackerChunkData {
-  pos?: DataTrackerXYZChunk;
-  speed?: DataTrackerXYZChunk;
-  ori?: DataTrackerXYZChunk;
-  status?: DataTrackerStatusChunk;
-  accel?: DataTrackerXYZChunk;
-  trgtpos?: DataTrackerXYZChunk;
-  timestamp?: DataTrackerTimestampChunk;
+	pos?: DataTrackerXYZChunk;
+	speed?: DataTrackerXYZChunk;
+	ori?: DataTrackerXYZChunk;
+	status?: DataTrackerStatusChunk;
+	accel?: DataTrackerXYZChunk;
+	trgtpos?: DataTrackerXYZChunk;
+	timestamp?: DataTrackerTimestampChunk;
 }
 
 export interface DataTrackerChunk {
-  chunk: Chunk;
-  data: DataTrackerChunkData;
+	chunk: Chunk;
+	data: DataTrackerChunkData;
 }
