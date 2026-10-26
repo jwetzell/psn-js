@@ -37,7 +37,6 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@biomejs/biome": "2.5.15",
-		"@eslint/js": "10.0.1",
 		"@types/node": "24.7.2",
 		"globals": "17.13.0",
 		"rimraf": "6.1.3",
