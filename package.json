@@ -41,6 +41,6 @@
 		"globals": "17.14.0",
 		"rimraf": "6.1.4",
 		"tsdown": "0.23.5",
-		"typescript": "6.0.3"
+		"typescript": "7.0.2"
 	}
 }
