@@ -40,7 +40,7 @@
 		"@types/node": "26.6.6",
 		"globals": "17.14.0",
 		"rimraf": "6.1.4",
-		"tsdown": "0.23.5",
+		"tsdown": "0.23.7",
 		"typescript": "6.0.3"
 	}
 }
