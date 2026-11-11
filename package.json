@@ -36,7 +36,7 @@
 	"repository": "https://github.com/jwetzell/psn-js",
 	"license": "MIT",
 	"devDependencies": {
-		"@biomejs/biome": "2.6.6",
+		"@biomejs/biome": "2.6.7",
 		"@types/node": "26.6.6",
 		"globals": "17.14.0",
 		"rimraf": "6.1.4",
